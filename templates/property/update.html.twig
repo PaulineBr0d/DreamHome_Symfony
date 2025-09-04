@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier une annonce</title>
+        <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<main class="form-connect" >
+
+<form method="post" class="form-container" enctype="multipart/form-data">
+    <h4>Modifier une annonce</h4>
+    
+    <img src="" alt="Image actuelle" style="max-width:300px;"><br>
+ 
+    <label for="image">Changer l’image (optionnel)</label>
+    <input type="file" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/webp" />
+    <label for="title">Titre :</label>
+    <input type="text" name="title" id="title" required value="<?= htmlspecialchars($listing['title']) ?>">
+    <label for="property-type">Type de bien :</label>
+    <select id="property-type" name="property_type" required>
+        <option value="">--Préciser le type de bien svp--</option>
+        
+    </select>
+    <label for="price">Prix (€) :</label>
+    <input type="number" name="price" id="price" required value="<?= htmlspecialchars($listing['price']) ?>">
+
+    <label for="city">Ville :</label>
+    <input type="text" name="location" id="location" required value="<?= htmlspecialchars($listing['city']) ?>">
+    <label for="transaction-type">Type de transaction :</label>
+    <select id="transaction-type" name="transaction_type" required>
+        <option value="">--Préciser le type de transaction--</option>
+       
+    </select>        
+    <label for="description">Description :</label>
+    <textarea id="description" name="description" cols="30" rows="10" required></textarea>
+    <button type="submit">Modifier l'annonce</button>
+    <div>Retour à l'<a href="/">accueil</a></div>
+</form>
+</main>
+</body>
+</html>
