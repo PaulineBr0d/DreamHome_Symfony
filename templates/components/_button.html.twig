@@ -1,5 +1,9 @@
-<form action="{{ action }}" method="{{ method|default('POST') }}"
-      onsubmit="{{ confirm is defined ? 'return confirm(\'' ~ confirm ~ '\');' : '' }}">
+<form action="{{ action }}"
+      method="{{ method|default('POST') }}"
+      {% if confirm is defined %}onsubmit="return confirm('{{ confirm }}');"{% endif %}>
+    {% if csrfToken is defined %}
+        <input type="hidden" name="_token" value="{{ csrf_token(csrfToken) }}">
+    {% endif %}
     {% if hiddenId is defined %}
         <input type="hidden" name="id" value="{{ hiddenId }}">
     {% endif %}

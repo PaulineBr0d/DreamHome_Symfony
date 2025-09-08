@@ -2,7 +2,9 @@
 
 {% block title %}Find My Dream Home{% endblock %}
    {% block body %}
-    
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
     <main class="form-connect">
     <form action="" method="post" class="form-container" enctype="multipart/form-data" id="form-add">
     <h4>Nouvel ajout d'un bien</h4>
@@ -10,10 +12,12 @@
     <input type="text" name="title" id="title" required>
      <div  class="form-alert" id="isTitleValid"></div>
     <label for="property-type">Type :</label>
-   <select id="property-type" name="property_type" required>
+    <select id="property-type" name="property_type" required>
     <option value="">--Préciser le type de bien svp--</option>
-    
-</select>
+    {% for type in propertyTypes %}
+        <option value="{{ type.id }}">{{ type.name }}</option>
+    {% endfor %}
+    </select>
     <label for="image">Image</label>
     <input type="file" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/webp" />
     <label for="price">Prix (en €)</label>
@@ -23,9 +27,11 @@
     <input type="text" name="location" id="location" required>
     <div  class="form-alert" id="isLocationValid"></div>
     <select id="transaction-type" name="transaction_type" required>
-     <option value="">--Préciser le type de transaction--</option>
-    
-</select>
+    <option value="">--Préciser le type de transaction--</option>
+    {% for type in transaction %}
+        <option value="{{ type.id }}">{{ type.name }}</option>
+    {% endfor %}
+    </select>
     <label for="description">Description</label>
     <textarea id="description" name="description" cols="30" rows="10" required></textarea>
      <div  class="form-alert" id="isDescriptionValid"></div>

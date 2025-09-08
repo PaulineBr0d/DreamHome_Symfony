@@ -8,7 +8,7 @@
     {% for item in type1Listings  %}
         {% include 'components/_item.html.twig' with {
             item: item,
-         
+            favoriteIds: favoriteIds
         } %}
     {% else %}
         <p>Aucune annonce trouvée.</p>
@@ -19,7 +19,7 @@
     {% for item in type2Listings  %}
         {% include 'components/_item.html.twig' with {
             item: item,
-        
+            favoriteIds: favoriteIds
         } %}
     {% else %}
         <p>Aucune annonce trouvée.</p>
