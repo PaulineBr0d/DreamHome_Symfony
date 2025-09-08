@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find My Dream Home</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-    <body>
+{%extends 'base.html.twig' %}
+
+{% block title %}Find My Dream Home{% endblock %}
+   {% block body %}
+    
     <main class="form-connect">
     <form action="" method="post" class="form-container" enctype="multipart/form-data" id="form-add">
     <h4>Nouvel ajout d'un bien</h4>
@@ -35,8 +31,8 @@
      <div  class="form-alert" id="isDescriptionValid"></div>
     <button type="submit">Ajouter</button></form>
    
-    <div>Retour à l'<a href="/">accueil</a></div>
+    <div>Retour à l'<a href="{{ path('home') }}">accueil</a></div>
     </main>
-    <script src="../js/script.js"></script>
-</body>
-</html>
+{% endblock %}
+
+

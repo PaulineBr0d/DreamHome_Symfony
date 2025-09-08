@@ -9,8 +9,30 @@ use Symfony\Component\HttpFoundation\Response;
 class FavoriteController extends AbstractController
 {
     #[Route('/favorite', name: 'favorite')]
-    public function index(): response
+    public function index(): Response
     {
-         return $this->render('user/favorite.html.twig'); 
+        $user = $this->getUser();
+
+        // Simuler des favoris
+        $favorites = [
+            [
+                'ID' => 1,
+                'title' => 'Maison avec piscine',
+                'img' => '/uploads/properties/maison1.webp',
+                'propertyTypeId' => 'Maison',
+                'price' => 450000,
+                'city' => 'Montpellier',
+                'description' => 'Maison 3 chambres, jardin, piscine et terrasse.',
+                'transaction' => 'Vente',
+                'userId' => $user ? $user->getId() : null,
+            ],
+            // autres favoris...
+        ];
+
+        return $this->render('user/favorite.html.twig', [
+            'favorites' => $favorites,
+            'userId' => $user ? $user->getId() : null,
+            'userRole' => $user ? $user->getRoles() : [],
+        ]);
     }
 }

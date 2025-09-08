@@ -1,20 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes favoris</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
-   
+{%extends 'base.html.twig' %}
 
-      <main>
-        <h2>Ma liste des favoris</h2>
+{% block title %}Mes favoris{% endblock %}
+   {% block body %}
+   <main>
+     <h2>Ma liste des favoris</h2>
          <section class="container">
-            
+          {% for item in favorites %}
+              {% include 'components/_item.html.twig' with { item: item, userId: userId, userRole: userRole, favorites: favorites|keys } %}
+          {% else %}
+              <p>Aucun favori trouvé.</p>
+          {% endfor %}
         </section>
         </main>
-       
-</body>
-</html>
+{% endblock %}

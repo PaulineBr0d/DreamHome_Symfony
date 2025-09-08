@@ -1,0 +1,9 @@
+<form action="{{ action }}" method="{{ method|default('POST') }}"
+      onsubmit="{{ confirm is defined ? 'return confirm(\'' ~ confirm ~ '\');' : '' }}">
+    {% if hiddenId is defined %}
+        <input type="hidden" name="id" value="{{ hiddenId }}">
+    {% endif %}
+    <button type="submit" class="button-item {{ color|default('') }}">
+        {{ text }}
+    </button>
+</form>

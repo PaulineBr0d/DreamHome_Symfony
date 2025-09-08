@@ -1,25 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find My Dream Home</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
+ {%extends 'base.html.twig' %}
 
- <main>
-    <h2>Nos annonces de maisons</h2>
-    <section class="container">
-     
-    </section>
-   
-    <div class="pagination">
-        
-    </div>
+{% block title %}Find My Dream Home{% endblock %}
+   {% block body %}
+   <main>
+     <h2>Nos annonces de maisons</h2>
+      <section class="container">
+      {% for item in pagination %}
+         {% include 'components/_item.html.twig' with { item: item } %}
+      {% else %}
+         <p>Aucune annonce trouvée.</p>
+      {% endfor %}
+   </section>
 
-</div>
-</main>
-
-</body>
-</html>
+   <div class="pagination">
+      {{ knp_pagination_render(pagination) }}
+   </div>
+     </main>
+{% endblock %}

@@ -1,0 +1,13 @@
+<div class="item"> 
+    <img src="{{ asset(item.img) }}" alt="Image de l'annonce">
+    <h3>{{ item.title|e }}</h3>
+    
+    <p><strong>Prix :</strong> {{ item.price|number_format(0, ',', ' ') }} €</p>
+    <p><strong>Ville :</strong> {{ item.city|e }}</p>
+    <p><strong>Description :</strong> {{ item.description|e }}</p>
+    <p><strong>Type de transaction :</strong> {{ item.transaction|e }}</p>
+
+    <div class="button">
+        {# Boutons favoris et suppression selon userId, etc. #}
+    </div>
+</div>

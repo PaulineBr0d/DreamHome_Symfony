@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Créer un compte sur Find My Dream Home</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body class="form-connect">
-     <main>
+ {%extends 'base.html.twig' %}
+
+{% block title %}Créer un compte sur Find My Dream Home{% endblock %}
+   {% block body %}
+      <main>
     <form action="" method="post" class="form-container" id="form-register">
     <h2>Inscription</h2>
     <label for="email">Email</label>
@@ -20,8 +15,6 @@
     <input type="password" name="confirm-password" id="confirm-password" required>
     <div class="form-alert" id="isPassSame"></div>
     <button type="submit">S'inscrire</button></form>   
-    <div>Déjà inscrit ? <a href="login.php">Connectez-vous</a></div>
+    <div>Déjà inscrit ? <a href="{{ path('login') }}">Connectez-vous</a></div>
      </main>
-       <script src="../js/script.js"></script>
-</body>
-</html>
+{% endblock %}

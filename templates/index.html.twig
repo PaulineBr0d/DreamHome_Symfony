@@ -2,12 +2,28 @@
 
 {% block title %}Home{% endblock %}
    {% block body %}
+   <main>
     <h2>Nos annonces de maisons</h2>
     <section class="container">
-  
-    </section>
+    {% for item in type1Listings  %}
+        {% include 'components/_item.html.twig' with {
+            item: item,
+         
+        } %}
+    {% else %}
+        <p>Aucune annonce trouvée.</p>
+    {% endfor %}
+</section>
     <h2>Nos annonces d’appartements</h2>
     <section class="container">
-       
-    </section>
+    {% for item in type2Listings  %}
+        {% include 'components/_item.html.twig' with {
+            item: item,
+        
+        } %}
+    {% else %}
+        <p>Aucune annonce trouvée.</p>
+    {% endfor %}
+</section>
+   </main>
 {% endblock %}

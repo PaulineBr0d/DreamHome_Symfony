@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion à Find My Dream Home</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body class="form-connect">
-    <main>
+ {%extends 'base.html.twig' %}
+
+{% block title %}Connexion à Find My Dream Home{% endblock %}
+   {% block body %}
+    <main class="form-connect">
     <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" class="form-container" method="post" id="form-login">
     <h4>Connexion</h4>
     <label for="email">Email</label>
@@ -17,9 +12,7 @@
     <input type="password" name="password" id="password" required>
     <div  class="form-alert" id="isPassValid"></div>
     <button type="submit">Se connecter</button></form> 
-    <div>Pas encore de compte ? <a href="register.php">Inscrivez-vous</a></div>
+    <div>Pas encore de compte ? <a href="{{ path('register') }}">Inscrivez-vous</a></div>
 
     </main>
- 
-</body>
-</html>
+{% endblock %}

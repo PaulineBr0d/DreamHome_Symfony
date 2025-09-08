@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recherche</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
-   
-<main>
+ {%extends 'base.html.twig' %}
+
+{% block title %}Recherche{% endblock %}
+   {% block body %}
+   <main>
 
 <form method="GET" action="" class="search-form">
     <input type="text" name="city" placeholder="Ville" value="">
@@ -31,6 +25,4 @@
    
 </section>
 </main>
-    
-</body>
-</html>
+{% endblock %}
