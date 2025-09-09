@@ -18,8 +18,9 @@
     <label for="property-type">Type de bien :</label>
     <select id="property-type" name="property_type" required>
         <option value="">--Préciser le type de bien svp--</option>
-        {#<option value="1" {% if property.propertyTypeId == 1 %}selected{% endif %}>Maison</option>#}
-        {#<option value="2" {% if property.propertyTypeId == 2 %}selected{% endif %}>Appartement</option>#}
+        {% for type in propertyTypes %}
+            <option value="{{ type.id }}">{{ type.name }}</option>
+        {% endfor %}
     </select>
 
     <label for="price">Prix (€) :</label>
@@ -31,8 +32,9 @@
     <label for="transaction-type">Type de transaction :</label>
     <select id="transaction-type" name="transaction_type" required>
         <option value="">--Préciser le type de transaction--</option>
-        {#<<option value="rent" {% if property.transaction == 'rent' %}selected{% endif %}>Location</option>#}
-        {#<<option value="sale" {% if property.transaction == 'sale' %}selected{% endif %}>Vente</option>#}
+       {% for type in transaction %}
+            <option value="{{ type.id }}">{{ type.name }}</option>
+        {% endfor %}
     </select>
 
     <label for="description">Description :</label>

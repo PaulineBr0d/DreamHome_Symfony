@@ -2,7 +2,11 @@
 namespace App\Controller\Property;
 
 use App\Entity\Listing;
+use App\Entity\PropertyType;
+use App\Entity\TransactionType;
 use App\Repository\ListingRepository;
+use App\Repository\PropertyTypeRepository;
+use App\Repository\TransactionTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,27 +17,34 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter; // Optionne
 class ItemController extends AbstractController
 {
     #[Route('/add', name: 'add')]
-    public function add(Request $request, EntityManagerInterface $em): Response
-    {
+    public function add( Request $request,
+        EntityManagerInterface $em,
+        PropertyTypeRepository $propertyTypeRepo,
+        TransactionTypeRepository $transactionTypeRepo
+    ): Response {
         if ($request->isMethod('POST')) {
             $title = $request->request->get('title');
             $price = (float)$request->request->get('price');
             $city = $request->request->get('location');
             $description = $request->request->get('description');
+            $propertyTypeId = (int) $request->request->get('property_type');
+            $transactionTypeId = (int) $request->request->get('transaction_type');
 
             $item = new Listing();
             $item->setTitle($title);
             $item->setPrice($price);
             $item->setCity($city);
             $item->setDescription($description);
-
+            $item->setPropertyType($propertyType);
+            $item->setTransactionType($transactionType);
+ 
             // Dates de création et mise à jour
             $now = new \DateTimeImmutable();
             $item->setCreatedAt($now);
             $item->setUpdatedAt($now);
 
             // associer l'utilisateur connecté
-            // $listing->setUser($this->getUser());
+            $item->setUser($this->getUser());
 
             $em->persist($listing);
             $em->flush();
@@ -43,14 +54,8 @@ class ItemController extends AbstractController
         }
 
         return $this->render('property/add.html.twig', [
-            'transaction' => [
-                ['id' => 1, 'name' => 'Vente'],
-                ['id' => 2, 'name' => 'Location'],
-            ],
-            'propertyTypes' => [
-                ['id' => 1, 'name' => 'Maison'],
-                ['id' => 2, 'name' => 'Appartement'],
-            ],
+            'transaction' => $transactionTypeRepo->findAll(),
+            'propertyTypes' => $propertyTypeRepo->findAll(),
         ]);
     }
 
@@ -58,18 +63,27 @@ class ItemController extends AbstractController
     public function update(
         #[MapEntity(id: 'id')] Listing $item,  
         Request $request,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        PropertyTypeRepository $propertyTypeRepo,
+        TransactionTypeRepository $transactionTypeRepo
     ): Response {
         if ($request->isMethod('POST')) {
             $title = $request->request->get('title');
             $price = (float)$request->request->get('price');
             $city = $request->request->get('location');
             $description = $request->request->get('description');
+            $propertyTypeId = (int) $request->request->get('property_type');
+            $transactionTypeId = (int) $request->request->get('transaction_type');
+             
+            $propertyType = $propertyTypeRepo->find($propertyTypeId);
+            $transactionType = $transactionTypeRepo->find($transactionTypeId);
 
             $item->setTitle($title);
             $item->setPrice($price);
             $item->setCity($city);
             $item->setDescription($description);
+            $item->setPropertyType($propertyType);
+            $item->setTransactionType($transactionType);
             $item->setUpdatedAt(new \DateTimeImmutable());
 
             $em->flush();
@@ -80,6 +94,8 @@ class ItemController extends AbstractController
 
         return $this->render('property/update.html.twig', [
             'property' => $item,
+            'transaction' => $transactionTypeRepo->findAll(),
+            'propertyTypes' => $propertyTypeRepo->findAll(),
         ]);
     }
 

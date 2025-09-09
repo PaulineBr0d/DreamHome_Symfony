@@ -3,6 +3,7 @@
 namespace App\Controller\Property;
 
 use App\Repository\ListingRepository;
+use App\Repository\PropertyTypeRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,49 +13,39 @@ use Symfony\Component\Routing\Annotation\Route;
 class ListingController extends AbstractController
 {
     private ListingRepository $listingRepository;
+    private PropertyTypeRepository $propertyTypeRepository;
 
-    public function __construct(ListingRepository $listingRepository)
+    public function __construct(  
+        ListingRepository $listingRepository,
+        PropertyTypeRepository $propertyTypeRepository)
     {
         $this->listingRepository = $listingRepository;
+        $this->propertyTypeRepository = $propertyTypeRepository;
     }
 
-    #[Route('/listing/house', name: 'listing_house')]
-    public function typeHouse(Request $request, PaginatorInterface $paginator): Response
-    {
-        $listings = $this->listingRepository->findBy(['propertyType' => 1]);
+    #[Route('/listing/type/{name}', name: 'listing_by_type')]
+    public function listingsByType(
+        string $name,
+        Request $request,
+        PaginatorInterface $paginator
+    ): Response {
+    $type = $this->propertyTypeRepository->findOneBy(['name' => $name]);
 
-        $pagination = $paginator->paginate(
-            $listings,
-            $request->query->getInt('page', 1),
-            10
-        );
-
-        $favoriteIds = $request->getSession()->get('favorites', []);
-
-        return $this->render('property/house.html.twig', [
-            'pagination' => $pagination,
-            'favoriteIds' => $favoriteIds,
-        ]);
+    if (!$type) {
+        throw $this->createNotFoundException('Type de bien introuvable.');
     }
 
-    #[Route('/listing/apartment', name: 'listing_apartment')]
-    public function typeApartment(Request $request, PaginatorInterface $paginator): Response
-    {
-        $listings = $this->listingRepository->findBy(['propertyType' => 2]);
+    $listings = $this->listingRepository->findBy(['propertyType' => $type]);
 
-        $pagination = $paginator->paginate(
-            $listings,
-            $request->query->getInt('page', 1),
-            10
-        );
+    $pagination = $paginator->paginate($listings, $request->query->getInt('page', 1), 10);
+    $favoriteIds = $request->getSession()->get('favorites', []);
 
-        $favoriteIds = $request->getSession()->get('favorites', []);
-
-        return $this->render('property/apartment.html.twig', [
-            'pagination' => $pagination,
-            'favoriteIds' => $favoriteIds,
-        ]);
-    }
+    return $this->render('property/list_by_type.html.twig', [
+        'pagination' => $pagination,
+        'favoriteIds' => $favoriteIds,
+        'type' => $name
+    ]);
+}
 
     #[Route('/listing/{id}', name: 'listing_show', requirements: ['id' => '\d+'])]
     public function show(int $id, Request $request): Response

@@ -2,8 +2,8 @@
     <h1>Find My Dream Home</h1>
     <nav class="nav-links">
         <a href="{{ path('home') }}">Home</a> 
-        <a href="{{ path('listing_house') }}">House</a> 
-        <a href="{{ path('listing_apartment') }}">Apartments</a> 
+        <a href="{{ path('listing_by_type', {'name': 'Appartement'}) }}">Apartments</a>
+        <a href="{{ path('listing_by_type', {'name': 'Maison'}) }}">House</a>
         <a href="{{ path('listing_search') }}">Search</a> 
         
         <a href="{{ path('add') }}">Add</a> 

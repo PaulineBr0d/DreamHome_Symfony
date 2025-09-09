@@ -3,7 +3,7 @@
 {% block title %}Find My Dream Home{% endblock %}
    {% block body %}
    <main>
-    <h2>Nos annonces d’appartements</h2>
+    <h2>Nos annonces {{ (type starts with('A') ? 'd’' ~ type: 'de ' ~ type)|lower }}s</h2>
     <section class="container">
     {% for item in pagination %}
         {% include 'components/_item.html.twig' with { item: item } %}

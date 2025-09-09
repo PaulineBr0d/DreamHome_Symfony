@@ -35,6 +35,18 @@ class Listing
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'listings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TransactionType $transactionType = null;
+
+    #[ORM\ManyToOne(inversedBy: 'listings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PropertyType $propertyType = null;
+
+    #[ORM\ManyToOne(inversedBy: 'listings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +133,42 @@ class Listing
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getTransactionType(): ?TransactionType
+    {
+        return $this->transactionType;
+    }
+
+    public function setTransactionType(?TransactionType $transactionType): static
+    {
+        $this->transactionType = $transactionType;
+
+        return $this;
+    }
+
+    public function getPropertyType(): ?PropertyType
+    {
+        return $this->propertyType;
+    }
+
+    public function setPropertyType(?PropertyType $propertyType): static
+    {
+        $this->propertyType = $propertyType;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $userId): static
+    {
+        $this->user = $user;
 
         return $this;
     }

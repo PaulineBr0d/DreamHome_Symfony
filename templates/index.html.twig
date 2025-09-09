@@ -5,7 +5,7 @@
    <main>
     <h2>Nos annonces de maisons</h2>
     <section class="container">
-    {% for item in latestListings  %}
+    {% for item in houses  %}
         {% include 'components/_item.html.twig' with {
             item: item,
             favoriteIds: favoriteIds
@@ -16,7 +16,7 @@
 </section>
     <h2>Nos annonces d’appartements</h2>
     <section class="container">
-    {% for item in latestListings  %}
+    {% for item in apartments  %}
         {% include 'components/_item.html.twig' with {
             item: item,
             favoriteIds: favoriteIds
