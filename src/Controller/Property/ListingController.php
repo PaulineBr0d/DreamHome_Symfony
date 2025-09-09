@@ -57,7 +57,7 @@ class ListingController extends AbstractController
     }
 
     #[Route('/listing/{id}', name: 'listing_show', requirements: ['id' => '\d+'])]
-    public function show(int $id): Response
+    public function show(int $id, Request $request): Response
     {
         $listing = $this->listingRepository->find($id);
 
@@ -65,7 +65,7 @@ class ListingController extends AbstractController
             throw $this->createNotFoundException('Annonce introuvable.');
         }
 
-        $favoriteIds = $this->get('session')->get('favorites', []);
+        $favoriteIds = $request->getSession()->get('favorites', []);
 
         return $this->render('property/show.html.twig', [
             'listing' => $listing,
@@ -83,7 +83,7 @@ class ListingController extends AbstractController
 
         $results = $this->listingRepository->search($city, $type, $transaction, $maxPrice);
 
-        $favoriteIds = $request->getSession()->get('favorites', []);
+         $favoriteIds = $request->getSession()->get('favorites', []);
 
         return $this->render('property/search.html.twig', [
             'listings' => $results,
