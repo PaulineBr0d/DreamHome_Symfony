@@ -2,7 +2,9 @@
 
 namespace App\Controller\Property;
 
-use App\Service\PropertyProvider;
+use App\Entity\Listing;
+use App\Repository\ListingRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,39 +13,45 @@ use Symfony\Component\HttpFoundation\Response;
 class ItemController extends AbstractController
 {
     #[Route('/add', name: 'add')]
-     public function add(Request $request): Response
-     {
-     if ($request->isMethod('POST')) {
-        //Récupération des données du formulaire
+    public function add(Request $request, EntityManagerInterface $em): Response
+    {
+        if ($request->isMethod('POST')) {
         $title = $request->request->get('title');
-        $propertyTypeId = (int)$request->request->get('property_type');
+        # $propertyTypeId = (int)$request->request->get('property_type');
         $price = (float)$request->request->get('price');
         $city = $request->request->get('location');
-        $transaction = $request->request->get('transaction_type');
+        #$transaction = $request->request->get('transaction_type');
         $description = $request->request->get('description');
 
-        //Gestion de l’image uploadée 
-        $imageFile = $request->files->get('image');
-        $imgPath = null;
+        #$imageFile = $request->files->get('image');
+        #$imgPath = null;
 
-        if ($imageFile) {
-            $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-            $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
-            $imgPath = '/uploads/properties/' . $newFilename;
-        } else {
-            $imgPath = '/uploads/properties/default.webp';
-        }
+        #if ($imageFile) {
+        #    $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+        #    $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
+        #    $imgPath = '/uploads/properties/' . $newFilename;
+        #} else {
+        #    $imgPath = '/uploads/properties/default.webp';
+        #}
 
-        //BDD
+        // Création de l'entité Listing
+        $listing = new Listing();
+        $listing->setTitle($title);
+        #$listing->setPropertyType($propertyTypeId); 
+        $listing->setPrice($price);
+        $listing->setCity($city);
+        #$listing->setTransaction($transaction);
+        $listing->setDescription($description);
+        #$listing->setImagePath($imgPath);
+        #$listing->setUser($this->getUser()); // lier l’annonce à l’utilisateur connecté
 
-        //Message flash
+        $em->persist($listing);
+        $em->flush();
+
         $this->addFlash('success', 'Annonce ajoutée avec succès !');
-
-        //Redirection
         return $this->redirectToRoute('add');
     }
 
-    // Affichage du formulaire
     return $this->render('property/add.html.twig', [
         'transaction' => [
             ['id' => 1, 'name' => 'Vente'],
@@ -54,73 +62,71 @@ class ItemController extends AbstractController
             ['id' => 2, 'name' => 'Appartement'],
         ]
     ]);
-}
-
+    }
 
 
     #[Route('/update/{item}', requirements: ['item' => '\d+'], name: 'update')]
-     public function update(int $item, PropertyProvider $provider, Request $request): Response
-     {
-     //Récupération de la propriété à modifier
-          $properties = $provider->getAllProperties();
-          $property = null;
+    public function update(
+        int $item,
+        ListingRepository $repo,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        $listing = $repo->find($item);
 
-          foreach ($properties as $p) {
-               if ($p['id'] === $item) {
-                    $property = $p;
-                    break;
-               }
-          }
-
-          if (!$property) {
-               throw $this->createNotFoundException("Propriété non trouvée.");
-          }
-
-     //Si le formulaire est soumis en POST
-     if ($request->isMethod('POST')) {
-          // Récupérer les données envoyées par le formulaire
-          $title = $request->request->get('title');
-          $propertyTypeId = (int)$request->request->get('property_type');
-          $price = (float)$request->request->get('price');
-          $city = $request->request->get('location');
-          $transaction = $request->request->get('transaction_type');
-          $description = $request->request->get('description');
-
-          // mise à jour
-          $property['title'] = $title;
-          $property['propertyTypeId'] = $propertyTypeId;
-          $property['price'] = $price;
-          $property['city'] = $city;
-          $property['transaction'] = $transaction;
-          $property['description'] = $description;
-
-
-          $this->addFlash('success', 'Annonce mise à jour.');
-
-          // Redirection ou affichage
-          return $this->redirectToRoute('update', ['item' => $item]);
-     }
-
-     //Si GET → afficher le formulaire avec données existantes
-     return $this->render('property/update.html.twig', [
-          'property' => $property
-     ]);
-     }
-
-
-      #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
-    public function delete(int $id, Request $request, ListingRepository $repo, EntityManagerInterface $em): Response
-    {
-        $submittedToken = $request->request->get('_token');
-        if ($this->isCsrfTokenValid('delete' . $id, $submittedToken)) {
-            $property = $repo->find($id);
-            if ($property && ($this->getUser() === $property->getUser() || $this->isGranted('ROLE_ADMIN'))) {
-                $em->remove($property);
-                $em->flush();
-                $this->addFlash('success', 'Annonce supprimée.');
-            }
+        if (!$listing) {
+            throw $this->createNotFoundException("Propriété non trouvée.");
         }
 
-        return $this->redirectToRoute('home');
+    if ($request->isMethod('POST')) {
+        $title = $request->request->get('title');
+        #$propertyTypeId = (int)$request->request->get('property_type');
+        $price = (float)$request->request->get('price');
+        $city = $request->request->get('location');
+        #$transaction = $request->request->get('transaction_type');
+        $description = $request->request->get('description');
+
+        $listing->setTitle($title);
+        #$listing->setPropertyType($propertyTypeId);
+        $listing->setPrice($price);
+        $listing->setCity($city);
+        #$listing->setTransaction($transaction);
+        $listing->setDescription($description);
+
+        $em->flush();
+
+        $this->addFlash('success', 'Annonce mise à jour.');
+        return $this->redirectToRoute('update', ['item' => $item]);
+    }   
+
+        return $this->render('property/update.html.twig', [
+            'property' => $listing
+        ]);
     }
+
+        #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
+    public function delete(int $id, Request $request, ListingRepository $repo, EntityManagerInterface $em): Response
+    {
+        $token = $request->request->get('_token');
+
+    if ($this->isCsrfTokenValid('delete' . $id, $token)) {
+        $listing = $repo->find($id);
+
+        if (!$listing) {
+            $this->addFlash('danger', 'Annonce introuvable.');
+            return $this->redirectToRoute('home');
+        }
+
+        if ($this->getUser() === $listing->getUser() || $this->isGranted('ROLE_ADMIN')) {
+            $em->remove($listing);
+            $em->flush();
+            $this->addFlash('success', 'Annonce supprimée.');
+        } else {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour supprimer cette annonce.');
+        }
+    }
+
+    return $this->redirectToRoute('home');
+}
+
 }

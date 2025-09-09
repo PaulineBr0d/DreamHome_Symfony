@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ listing.title }}{% endblock %}
+
+{% block body %}
+    <main class="container">
+        <h1>Détail de l'annonce</h1>
+
+        {% include 'components/_item.html.twig' with {
+            item: listing,
+            favoriteIds: favoriteIds
+        } %}
+    </main>
+{% endblock %}

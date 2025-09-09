@@ -4,25 +4,37 @@
    {% block body %}
    <main>
 
-<form method="GET" action="" class="search-form">
-    <input type="text" name="city" placeholder="Ville" value="">
-
-    <input type="number" name="max_price" placeholder="Prix max" value="">
+<form method="GET" action="{{ path('listing_search') }}" class="search-form">
+    <input type="text" name="city" placeholder="Ville" value="{{ app.request.get('city') }}">
+    
+    <input type="number" name="max_price" placeholder="Prix max" value="{{ app.request.get('max_price') }}">
 
     <select name="property_type">
         <option value="">Type de bien</option>
-        
+        <option value="1" {% if app.request.get('property_type') == '1' %}selected{% endif %}>Maison</option>
+        <option value="2" {% if app.request.get('property_type') == '2' %}selected{% endif %}>Appartement</option>
     </select>
 
     <select name="transaction_type">
         <option value="">Type de transaction</option>
-        
+        <option value="vente" {% if app.request.get('transaction_type') == 'vente' %}selected{% endif %}>Vente</option>
+        <option value="location" {% if app.request.get('transaction_type') == 'location' %}selected{% endif %}>Location</option>
     </select>
 
     <button type="submit">Rechercher</button>
 </form>
 <section class="container">
-   
+    {% if listings is defined %}
+        {% if listings|length > 0 %}
+            <div class="items-grid">
+                {% for item in listings %}
+                    {% include 'components/_listing_item.html.twig' %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucune annonce trouvée.</p>
+        {% endif %}
+    {% endif %}
 </section>
 </main>
 {% endblock %}

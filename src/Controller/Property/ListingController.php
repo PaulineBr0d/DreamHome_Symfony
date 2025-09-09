@@ -2,55 +2,34 @@
 
 namespace App\Controller\Property;
 
-use App\Service\PropertyProvider;
+use App\Repository\ListingRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ListingController extends AbstractController
 {
-    private PropertyProvider $propertyProvider;
+    private ListingRepository $listingRepository;
 
-    public function __construct(PropertyProvider $propertyProvider)
+    public function __construct(ListingRepository $listingRepository)
     {
-        $this->propertyProvider = $propertyProvider;
-
-    }
-    
-    #[Route('/', name: 'home')]
-    public function index(Request $request): Response
-    {
-        $allProperties = $this->propertyProvider->getAllProperties();
-        $favoriteIds = $request->getSession()->get('favorites', []);
-        //Filtre par type
-        $type1Listings = array_filter($allProperties, fn($p) => $p['propertyTypeId'] === 1);
-        $type2Listings = array_filter($allProperties, fn($p) => $p['propertyTypeId'] === 2);
-
-        // Max 3 items pour la page d'accueil
-        $type1Listings = array_slice($type1Listings, 0, 3);
-        $type2Listings = array_slice($type2Listings, 0, 3);
-
-        return $this->render('index.html.twig', [
-            'type1Listings' => $type1Listings,
-            'type2Listings' => $type2Listings,
-            'favoriteIds' => $favoriteIds,
-        ]);
+        $this->listingRepository = $listingRepository;
     }
 
-    #[Route('/house', name: 'house')]
+    #[Route('/listing/house', name: 'listing_house')]
     public function typeHouse(Request $request, PaginatorInterface $paginator): Response
     {
-        $listings = $this->propertyProvider->getPropertiesByType(1);
-        $favoriteIds = $request->getSession()->get('favorites', []);
-        //Knp Paginator pour paginer un tableau
+        $listings = $this->listingRepository->findBy(['propertyType' => 1]);
+
         $pagination = $paginator->paginate(
             $listings,
             $request->query->getInt('page', 1),
             10
         );
+
+        $favoriteIds = $request->getSession()->get('favorites', []);
 
         return $this->render('property/house.html.twig', [
             'pagination' => $pagination,
@@ -58,27 +37,57 @@ class ListingController extends AbstractController
         ]);
     }
 
-    #[Route('/apartment', name: 'apartment')]
+    #[Route('/listing/apartment', name: 'listing_apartment')]
     public function typeApartment(Request $request, PaginatorInterface $paginator): Response
     {
-        $listings = $this->propertyProvider->getPropertiesByType(2);
-          $favoriteIds = $request->getSession()->get('favorites', []);
+        $listings = $this->listingRepository->findBy(['propertyType' => 2]);
+
         $pagination = $paginator->paginate(
             $listings,
             $request->query->getInt('page', 1),
             10
         );
 
+        $favoriteIds = $request->getSession()->get('favorites', []);
+
         return $this->render('property/apartment.html.twig', [
             'pagination' => $pagination,
-             'favoriteIds' => $favoriteIds,
+            'favoriteIds' => $favoriteIds,
         ]);
     }
-    #[Route('/search', name: 'search')]
-     public function search(): Response
+
+    #[Route('/listing/{id}', name: 'listing_show', requirements: ['id' => '\d+'])]
+    public function show(int $id): Response
     {
-        
-        return $this->render('property/search.html.twig');
+        $listing = $this->listingRepository->find($id);
+
+        if (!$listing) {
+            throw $this->createNotFoundException('Annonce introuvable.');
+        }
+
+        $favoriteIds = $this->get('session')->get('favorites', []);
+
+        return $this->render('property/show.html.twig', [
+            'listing' => $listing,
+            'favoriteIds' => $favoriteIds,
+        ]);
     }
 
+    #[Route('/listing/search', name: 'listing_search')]
+    public function search(Request $request): Response
+    {
+        $city = $request->query->get('city');
+        $type = $request->query->get('property_type');
+        $transaction = $request->query->get('transaction_type');
+        $maxPrice = $request->query->get('max_price');
+
+        $results = $this->listingRepository->search($city, $type, $transaction, $maxPrice);
+
+        $favoriteIds = $request->getSession()->get('favorites', []);
+
+        return $this->render('property/search.html.twig', [
+            'listings' => $results,
+            'favoriteIds' => $favoriteIds,
+        ]);
+    }
 }

@@ -2,22 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Repository\PropertyTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ORM\Entity(repositoryClass: PropertyTypeRepository::class)]
+class PropertyType
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $password = null;
+    #[ORM\Column(length: 100)]
+    private ?string $name = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -30,26 +27,14 @@ class User
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getName(): ?string
     {
-        return $this->email;
+        return $this->name;
     }
 
-    public function setEmail(string $email): static
+    public function setName(string $name): static
     {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
+        $this->name = $name;
 
         return $this;
     }

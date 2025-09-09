@@ -16,6 +16,32 @@ class ListingRepository extends ServiceEntityRepository
         parent::__construct($registry, Listing::class);
     }
 
+    public function search(?string $city, ?int $type, ?string $transaction, ?float $maxPrice): array
+    {
+    $qb = $this->createQueryBuilder('l');
+
+    if ($city) {
+        $qb->andWhere('l.city LIKE :city')
+           ->setParameter('city', '%' . $city . '%');
+    }
+
+    if ($type) {
+        $qb->andWhere('l.propertyType = :type')
+           ->setParameter('type', $type);
+    }
+
+    if ($transaction) {
+        $qb->andWhere('l.transaction = :transaction')
+           ->setParameter('transaction', $transaction);
+    }
+
+    if ($maxPrice) {
+        $qb->andWhere('l.price <= :maxPrice')
+           ->setParameter('maxPrice', $maxPrice);
+    }
+
+    return $qb->getQuery()->getResult();
+    }
 //    /**
 //     * @return Listing[] Returns an array of Listing objects
 //     */
