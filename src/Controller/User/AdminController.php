@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\User;
 
 use App\Entity\PropertyType;
 use App\Entity\TransactionType;
+use App\Repository\ListingRepository;
+use App\Repository\UserRepository;
 use App\Form\PropertyTypeType;
 use App\Form\TransactionTypeType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,14 +16,37 @@ use Symfony\Component\HttpFoundation\Request;
 
 #[Route('/admin', name: 'admin_')]
 class AdminController extends AbstractController
-{       
+{   
+    #[Route('/', name: 'dashboard')]
+    public function index(): Response {
+        return $this->render('admin/dashboard.html.twig');
+    }
+
+
+    #[Route('/listings', name: 'listing_index')]
+    public function listingIndex(ListingRepository $listingRepository): Response
+    {
+        $listings = $listingRepository->findAll(); // ou filtrer selon besoins
+
+        return $this->render('admin/listing_index.html.twig', [
+            'listings' => $listings
+        ]);
+    }
+
+    #[Route('/users', name: 'user_index')]
+    public function userIndex(UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findAll();
+
+        return $this->render('admin/user_index.html.twig', [
+            'users' => $users
+        ]);
+    }
     #[Route('/property-type/add', name: 'property_type_add')]
     public function addPropertyType(Request $request, EntityManagerInterface $em)
     {
         $propertyType = new PropertyType();
-        #$now = new \DateTimeImmutable();
-        #$propertyType->setCreatedAt($now);
-        #$propertyType->setUpdatedAt($now);
+    
 
         $form = $this->createForm(PropertyTypeType::class, $propertyType);
         $form->handleRequest($request);
@@ -45,10 +70,6 @@ class AdminController extends AbstractController
     public function addTransactionType(Request $request, EntityManagerInterface $em)
     {
         $transactionType = new TransactionType();
-
-        #$now = new \DateTimeImmutable();
-        #$transactionType->setCreatedAt($now);
-        #$transactionType->setUpdatedAt($now);
 
         $form = $this->createForm(TransactionTypeType::class, $transactionType);
         $form->handleRequest($request);

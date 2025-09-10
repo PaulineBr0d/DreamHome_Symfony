@@ -5,10 +5,15 @@
         <a href="{{ path('listing_by_type', {'name': 'Appartement'}) }}">Apartments</a>
         <a href="{{ path('listing_by_type', {'name': 'Maison'}) }}">House</a>
         <a href="{{ path('listing_search') }}">Search</a> 
-        
+        {% if app.user %}
         <a href="{{ path('add') }}">Add</a> 
-
         <a href="{{ path('favorite') }}">Favoris</a> 
-       
-        <a href="{{ path('app_login') }}">Login</a> 
+        <a href="{{ path('app_logout') }}">Logout</a> 
+        {% endif %}
+        {% if not app.user %}
+         <a href="{{ path('app_login') }}">Login</a> 
+        {% endif %}
+        {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('admin_dashboard') }}">Dashboard</a> 
+         {% endif %}
 </header>

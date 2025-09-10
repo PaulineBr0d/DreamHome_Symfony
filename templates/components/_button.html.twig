@@ -1,13 +1,19 @@
-<form action="{{ action }}"
-      method="{{ method|default('POST') }}"
-      {% if confirm is defined %}onsubmit="return confirm('{{ confirm }}');"{% endif %}>
-    {% if csrfToken is defined %}
-        <input type="hidden" name="_token" value="{{ csrf_token(csrfToken) }}">
-    {% endif %}
-    {% if hiddenId is defined %}
-        <input type="hidden" name="id" value="{{ hiddenId }}">
-    {% endif %}
-    <button type="submit" class="button-item {{ color|default('') }}">
+{% if method is defined and method != 'GET' %}
+    <form action="{{ action }}" method="{{ method|default('POST') }}"
+          {% if confirm is defined %}onsubmit="return confirm('{{ confirm }}');"{% endif %}>
+        {% if csrfToken is defined %}
+            <input type="hidden" name="_token" value="{{ csrf_token(csrfToken) }}">
+        {% endif %}
+        {% if hiddenId is defined %}
+            <input type="hidden" name="id" value="{{ hiddenId }}">
+        {% endif %}
+        <button type="submit" class="button-item {{ color|default('') }}">
+            {{ text }}
+        </button>
+    </form>
+{% else %}
+    <a href="{{ action }}" class="button-item {{ color|default('') }}"
+       {% if confirm is defined %}onclick="return confirm('{{ confirm }}');"{% endif %}>
         {{ text }}
-    </button>
-</form>
+    </a>
+{% endif %}

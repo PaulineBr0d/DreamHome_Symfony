@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+
+<nav>
+    <ul>
+        <li><a href="{{ path('admin_listing_index') }}">Gérer les annonces</a></li>
+        <li><a href="{{ path('admin_user_index') }}">Gérer les utilisateurs</a></li>
+        <li><a href="{{ path('admin_property_type_add') }}">Gérer les types de propriété</a></li>
+        <li><a href="{{ path('admin_transaction_type_add') }}">Gérer les types de transaction</a></li>
+    </ul>
+</nav>
+{% endblock %}

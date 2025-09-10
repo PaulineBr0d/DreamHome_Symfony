@@ -10,10 +10,6 @@ Reprise et migration du projet PHP natif [Dream Home](https://github.com/Pauline
 - Visualisation des annonces
 - Ajout aux favoris (utilisateurs connectés)
 
-### Authentification
-- Inscription / Connexion / Déconnexion
-- Gestion des sessions
-- Redirection sécurisée
 
 ### Gestion des annonces
 - Création d’annonces
@@ -21,6 +17,34 @@ Reprise et migration du projet PHP natif [Dream Home](https://github.com/Pauline
 - Relations entre annonces, utilisateurs, type de bien, type de transaction
 
 ---
+
+## **#1 - Ajout de l’authentification et d’un espace d’administration**
+
+### **1. Authentification**
+
+- Mettre en place un système qui permet à un utilisateur de **s’inscrire** et de **se connecter**.
+- Garantir la sécurité des mots de passe.
+- Prévoir une interface adaptée selon que l’utilisateur est connecté ou non (affichage conditionnel des menus, etc …).
+
+---
+
+### **2. Partie Administration**
+
+- Créer un **espace réservé uniquement aux administrateurs**.
+- Dans cet espace, l’administrateur doit pouvoir gérer (CRUD):
+    - Les types de transactions (vente, location, etc.)
+    - Les types de biens (maison, appartement, terrain, etc.)
+    - Les annonces immobilières (listings)
+    - Les utilisateurs
+
+---
+
+### **3. Contraintes**
+
+- Séparer clairement l’espace public (site accessible à tous) de l’espace d’administration.
+- Mettre en place des règles d’accès : seuls les administrateurs peuvent entrer dans la partie admin.
+- Proposer une navigation claire entre les différentes parties du site.
+
 
 ## Technologies
 
@@ -30,6 +54,3 @@ Reprise et migration du projet PHP natif [Dream Home](https://github.com/Pauline
 - **PHP 8.4+**
 - **MySQL**
 
-## Améliorations
-
- - Ajouter une interface Admin avec formulaires sur types de transaction et propriété

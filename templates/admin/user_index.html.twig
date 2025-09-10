@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs - Admin{% endblock %}
+
+{% block body %}
+<main>
+    <h2>Liste des utilisateurs</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles|join(', ') }}</td>
+                <td>
+                    {# Exemple : bannir ou supprimer #}
+                    {% if user != app.user %}
+                        {% include 'components/_button.html.twig' with {
+                            action: path('admin_user_delete', {id: user.id}),
+                            confirm: 'Confirmer la suppression de cet utilisateur ?',
+                            csrfToken: 'delete_user' ~ user.id,
+                            text: 'Supprimer',
+                            color: 'red'
+                        } %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">Aucun utilisateur</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}
