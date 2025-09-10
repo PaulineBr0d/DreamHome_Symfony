@@ -1,48 +1,27 @@
  {%extends 'base.html.twig' %}
 
 {% block title %}Modifier une annonce{% endblock %}
-   {% block body %}
+
+ {% block body %}
+
   <main class="form-connect" >
-
-    <form method="post" class="form-container" enctype="multipart/form-data">
-    <h4>Modifier une annonce</h4>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label == 'success' ? 'success' : 'danger' }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %} 
     
-    <img src="{{ property.imageUrl}}" alt="Image actuelle" style="max-width:300px;"><br>
+    <h4>Modifier une annonce</h4>
 
-    <label for="image">Changer l’image (optionnel)</label>
-    <input type="file" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/webp" />
+        {% include 'components/_form.html.twig' with {
+            form: form,
+            button_label: 'Modifer'
+        } %}
+    
 
-    <label for="title">Titre :</label>
-    <input type="text" name="title" id="title" required value="{{ property.title }}">
-
-    <label for="property-type">Type de bien :</label>
-    <select id="property-type" name="property_type" required>
-        <option value="">--Préciser le type de bien svp--</option>
-        {% for type in propertyTypes %}
-            <option value="{{ type.id }}">{{ type.name }}</option>
-        {% endfor %}
-    </select>
-
-    <label for="price">Prix (€) :</label>
-    <input type="number" name="price" id="price" required value="{{ property.price }}">
-
-    <label for="city">Ville :</label>
-    <input type="text" name="location" id="location" required value="{{ property.city }}">
-
-    <label for="transaction-type">Type de transaction :</label>
-    <select id="transaction-type" name="transaction_type" required>
-        <option value="">--Préciser le type de transaction--</option>
-       {% for type in transaction %}
-            <option value="{{ type.id }}">{{ type.name }}</option>
-        {% endfor %}
-    </select>
-
-    <label for="description">Description :</label>
-    <textarea id="description" name="description" cols="30" rows="10" required>{{ property.description }}</textarea>
-
-    <button type="submit">Modifier l'annonce</button>
-      
     <div>Retour à l'<a href="{{ path('home') }}">accueil</a></div>
-</form>
+    
 </main>
 {% endblock %}

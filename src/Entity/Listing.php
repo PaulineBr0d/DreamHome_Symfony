@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ListingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,15 +16,47 @@ class Listing
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Le titre est obligatoire.")]
+    #[Assert\Length(
+        min: 5,
+        max: 50,
+        minMessage: "Le titre doit faire au moins {{ limit }} caractères.",
+        maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $title = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Le prix est obligatoire.")]
+    #[Assert\Type(
+        type: 'numeric',
+        message: "Le prix doit être un nombre valide."
+    )]
+    #[Assert\Positive(message: "Le prix doit être un nombre positif.")]
+    #[Assert\Range(
+        min: 100,
+        max: 10000000,
+        notInRangeMessage: "Le prix doit être entre {{ min }} et {{ max }}."
+    )]
     private ?float $price = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "La ville est obligatoire.")]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: "La ville doit faire au moins {{ limit }} caractères.",
+        maxMessage: "La ville ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $city = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
+    #[Assert\Length(
+        min: 10,
+        max: 150,
+        minMessage: "La description doit faire au moins {{ limit }} caractères.",
+        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -166,7 +199,7 @@ class Listing
         return $this->user;
     }
 
-    public function setUser(?User $userId): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 

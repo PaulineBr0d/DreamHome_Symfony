@@ -45,7 +45,7 @@ class ListingController extends AbstractController
         'favoriteIds' => $favoriteIds,
         'type' => $name
     ]);
-}
+    }
 
     #[Route('/listing/{id}', name: 'listing_show', requirements: ['id' => '\d+'])]
     public function show(int $id, Request $request): Response

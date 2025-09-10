@@ -1,0 +1,18 @@
+{{ form_start(form,
+            attr: {
+                novalidate: 'novalidate', 
+                class: 'form-container',
+                enctype: 'multipart/form-data',
+                id: 'form-add'
+            }) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.price) }}
+    {{ form_row(form.city) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.propertyType) }}
+    {{ form_row(form.transactionType) }}
+
+    <button type="submit">
+        {{ button_label|default('Valider') }}
+    </button>
+{{ form_end(form) }}

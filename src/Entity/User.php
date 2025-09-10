@@ -81,12 +81,12 @@ class User
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updateAt;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updateAt): static
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
-        $this->updateAt = $updateAt;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

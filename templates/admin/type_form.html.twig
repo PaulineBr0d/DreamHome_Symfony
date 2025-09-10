@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<main class="form-connect" >
+    <h2>{{ title }}</h2>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        <button>Ajouter</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('home') }}">Retour à l'accueil</a>
+    </main>
+{% endblock %}

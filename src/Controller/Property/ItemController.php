@@ -1,9 +1,11 @@
 <?php 
 namespace App\Controller\Property;
 
+use App\Form\ListingType;
 use App\Entity\Listing;
 use App\Entity\PropertyType;
 use App\Entity\TransactionType;
+use App\Repository\UserRepository;
 use App\Repository\ListingRepository;
 use App\Repository\PropertyTypeRepository;
 use App\Repository\TransactionTypeRepository;
@@ -12,92 +14,68 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter; // Optionnel, si tu utilises annotations
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ItemController extends AbstractController
 {
     #[Route('/add', name: 'add')]
-    public function add( Request $request,
+    public function add(
+        Request $request,
         EntityManagerInterface $em,
-        PropertyTypeRepository $propertyTypeRepo,
-        TransactionTypeRepository $transactionTypeRepo
+        UserRepository $userRepository
     ): Response {
-        if ($request->isMethod('POST')) {
-            $title = $request->request->get('title');
-            $price = (float)$request->request->get('price');
-            $city = $request->request->get('location');
-            $description = $request->request->get('description');
-            $propertyTypeId = (int) $request->request->get('property_type');
-            $transactionTypeId = (int) $request->request->get('transaction_type');
+        $listing = new Listing();
 
-            $item = new Listing();
-            $item->setTitle($title);
-            $item->setPrice($price);
-            $item->setCity($city);
-            $item->setDescription($description);
-            $item->setPropertyType($propertyType);
-            $item->setTransactionType($transactionType);
- 
-            // Dates de création et mise à jour
-            $now = new \DateTimeImmutable();
-            $item->setCreatedAt($now);
-            $item->setUpdatedAt($now);
+        $now = new \DateTimeImmutable();
+        $listing->setCreatedAt($now);
+        $listing->setUpdatedAt($now);
+        //pour test
+        $user = $userRepository->find(1);
+        if (!$user) {
+            throw $this->createNotFoundException;
+        }
+        $listing->setUser($user);
+        
+        $form = $this->createForm(ListingType::class, $listing);
+        $form->handleRequest($request);
 
-            // associer l'utilisateur connecté
-            $item->setUser($this->getUser());
+        if ($form->isSubmitted() && $form->isValid()) {
+          
 
             $em->persist($listing);
             $em->flush();
 
             $this->addFlash('success', 'Annonce ajoutée avec succès !');
-            return $this->redirectToRoute('add');
+            return $this->redirectToRoute('listing_show', ['id' => $item->getId()]);
         }
 
         return $this->render('property/add.html.twig', [
-            'transaction' => $transactionTypeRepo->findAll(),
-            'propertyTypes' => $propertyTypeRepo->findAll(),
+            'form' => $form,
         ]);
-    }
+        }
 
     #[Route('/update/{id}', name: 'update', requirements: ['id' => '\d+'])]
     public function update(
-        #[MapEntity(id: 'id')] Listing $item,  
+        #[MapEntity(id: 'id')] Listing $item,
         Request $request,
         EntityManagerInterface $em,
-        PropertyTypeRepository $propertyTypeRepo,
-        TransactionTypeRepository $transactionTypeRepo
     ): Response {
-        if ($request->isMethod('POST')) {
-            $title = $request->request->get('title');
-            $price = (float)$request->request->get('price');
-            $city = $request->request->get('location');
-            $description = $request->request->get('description');
-            $propertyTypeId = (int) $request->request->get('property_type');
-            $transactionTypeId = (int) $request->request->get('transaction_type');
-             
-            $propertyType = $propertyTypeRepo->find($propertyTypeId);
-            $transactionType = $transactionTypeRepo->find($transactionTypeId);
+    $form = $this->createForm(ListingType::class, $item);
+    $form->handleRequest($request);
 
-            $item->setTitle($title);
-            $item->setPrice($price);
-            $item->setCity($city);
-            $item->setDescription($description);
-            $item->setPropertyType($propertyType);
-            $item->setTransactionType($transactionType);
-            $item->setUpdatedAt(new \DateTimeImmutable());
+    if ($form->isSubmitted() && $form->isValid()) {
+        $item->setUpdatedAt(new \DateTimeImmutable());
+        $em->flush();
 
-            $em->flush();
-
-            $this->addFlash('success', 'Annonce mise à jour.');
-            return $this->redirectToRoute('update', ['listing' => $item->getId()]);
-        }
-
-        return $this->render('property/update.html.twig', [
-            'property' => $item,
-            'transaction' => $transactionTypeRepo->findAll(),
-            'propertyTypes' => $propertyTypeRepo->findAll(),
-        ]);
+        $this->addFlash('success', 'Annonce mise à jour.');
+        return $this->redirectToRoute('listing_show', ['id' => $item->getId()]);
     }
+
+    return $this->render('property/update.html.twig', [
+        'form' => $form->createView(),
+        'property' => $item, 
+    ]);
+}
 
     #[Route('/delete/{id}', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(
