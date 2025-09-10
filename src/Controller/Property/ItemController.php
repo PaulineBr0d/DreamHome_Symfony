@@ -26,9 +26,9 @@ class ItemController extends AbstractController
     ): Response {
         $listing = new Listing();
 
-        $now = new \DateTimeImmutable();
-        $listing->setCreatedAt($now);
-        $listing->setUpdatedAt($now);
+        #$now = new \DateTimeImmutable();
+        #$listing->setCreatedAt($now);
+        #$listing->setUpdatedAt($now);
         //pour test
         $user = $userRepository->find(1);
         if (!$user) {
@@ -46,7 +46,7 @@ class ItemController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Annonce ajoutée avec succès !');
-            return $this->redirectToRoute('listing_show', ['id' => $item->getId()]);
+            return $this->redirectToRoute('listing_show', ['id' => $listing->getId()]);
         }
 
         return $this->render('property/add.html.twig', [
@@ -64,7 +64,7 @@ class ItemController extends AbstractController
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        $item->setUpdatedAt(new \DateTimeImmutable());
+       # $item->setUpdatedAt(new \DateTimeImmutable());
         $em->flush();
 
         $this->addFlash('success', 'Annonce mise à jour.');
@@ -86,16 +86,16 @@ class ItemController extends AbstractController
         $token = $request->request->get('_token');
 
         if ($this->isCsrfTokenValid('delete' . $item->getId(), $token)) {
-            if ($this->getUser() === $item->getUser() || $this->isGranted('ROLE_ADMIN')) {
+            #if ($this->getUser() === $item->getUser() || $this->isGranted('ROLE_ADMIN')) {
                 $em->remove($item);
                 $em->flush();
 
                 $this->addFlash('success', 'Annonce supprimée.');
             } else {
-                $this->addFlash('danger', 'Vous n\'avez pas les droits pour supprimer cette annonce.');
-            }
-        } else {
-            $this->addFlash('danger', 'Token CSRF invalide.');
+        #        $this->addFlash('danger', 'Vous n\'avez pas les droits pour supprimer cette annonce.');
+        #    }
+        #else {
+           $this->addFlash('danger', 'Token CSRF invalide.');
         }
 
         return $this->redirectToRoute('home');

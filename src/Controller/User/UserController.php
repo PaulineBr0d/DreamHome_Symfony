@@ -54,8 +54,8 @@ class UserController extends AbstractController
             $user->setPassword($hashedPassword);
 
             // Définir dates de création et mise à jour
-            $user->setCreatedAt(new \DateTimeImmutable());
-            $user->setUpdatedAt(new \DateTimeImmutable());
+            #$user->setCreatedAt(new \DateTimeImmutable());
+            #$user->setUpdatedAt(new \DateTimeImmutable());
 
             $entityManager->persist($user);
             $entityManager->flush();

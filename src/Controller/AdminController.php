@@ -19,9 +19,9 @@ class AdminController extends AbstractController
     public function addPropertyType(Request $request, EntityManagerInterface $em)
     {
         $propertyType = new PropertyType();
-        $now = new \DateTimeImmutable();
-        $propertyType->setCreatedAt($now);
-        $propertyType->setUpdatedAt($now);
+        #$now = new \DateTimeImmutable();
+        #$propertyType->setCreatedAt($now);
+        #$propertyType->setUpdatedAt($now);
 
         $form = $this->createForm(PropertyTypeType::class, $propertyType);
         $form->handleRequest($request);
@@ -46,9 +46,9 @@ class AdminController extends AbstractController
     {
         $transactionType = new TransactionType();
 
-        $now = new \DateTimeImmutable();
-        $transactionType->setCreatedAt($now);
-        $transactionType->setUpdatedAt($now);
+        #$now = new \DateTimeImmutable();
+        #$transactionType->setCreatedAt($now);
+        #$transactionType->setUpdatedAt($now);
 
         $form = $this->createForm(TransactionTypeType::class, $transactionType);
         $form->handleRequest($request);

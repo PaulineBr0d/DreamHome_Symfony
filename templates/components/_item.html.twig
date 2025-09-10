@@ -33,7 +33,6 @@
     {% include 'components/_button.html.twig' with {
         action: path('delete', {id: item.id}),
         confirm: 'Souhaitez-vous supprimer cette annonce ?',
-        hiddenId: item.id,
         csrfToken: 'delete' ~ item.id,
         text: 'Supprimer',
         color: 'red'
