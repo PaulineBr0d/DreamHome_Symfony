@@ -7,6 +7,8 @@ use App\Entity\User;
 use App\Entity\PropertyType;
 use App\Entity\TransactionType;
 use App\Repository\ListingRepository;
+use App\Repository\PropertyTypeRepository;
+use App\Repository\TransactionTypeRepository;
 use App\Repository\UserRepository;
 use App\Form\UserType;
 use App\Form\PropertyTypeType;
@@ -77,53 +79,63 @@ class AdminController extends AbstractController
         ]);
     }
     
-
-
-
-    #[Route('/property-type/add', name: 'property_type_add')]
-    public function addPropertyType(Request $request, EntityManagerInterface $em)
-    {
-        $propertyType = new PropertyType();
-    
-
-        $form = $this->createForm(PropertyTypeType::class, $propertyType);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $em->persist($propertyType);
-            $em->flush();
-
-            $this->addFlash('success', 'Type de propriété ajouté.');
-            return $this->redirectToRoute('admin_property_type_add');
+    #[Route('/types/{typeName}', name: 'types')]
+    public function dashboard(
+        string $typeName, 
+        PropertyTypeRepository $propertyRepo, 
+        TransactionTypeRepository $transactionRepo
+    ): Response {
+        if ($typeName === 'property') {
+            $types = $propertyRepo->findAll();
+            $title = 'Types de propriété';
+        } elseif ($typeName === 'transaction') {
+            $types = $transactionRepo->findAll();
+            $title = 'Types de transaction'; 
+        } else {
+            throw $this->createNotFoundException('Type inconnu');
         }
 
-        return $this->render('admin/type_form.html.twig', [
-            'form' => $form,
-            'title' => 'Ajouter un type de propriété',
+        return $this->render('admin/type_index.html.twig', [
+            'types' => $types,
+            'typeName' => $typeName,
+            'title' => $title,
         ]);
     }
 
-    #[Route('/transaction-type/add', name: 'transaction_type_add')]
-    public function addTransactionType(Request $request, EntityManagerInterface $em)
-    {
-        $transactionType = new TransactionType();
+    #[Route('/types/{typeName}/add', name: 'types_add')]
+    public function add(
+        string $typeName,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        if ($typeName === 'property') {
+            $type = new PropertyType();
+            $title = 'Ajouter un type de propriété';
+             $formTypeClass = PropertyTypeType::class;
+        } elseif ($typeName === 'transaction') {
+            $type = new TransactionType();
+            $title = 'Ajouter un type de transaction';
+             $formTypeClass = TransactionTypeType::class;
+        } else {
+            throw $this->createNotFoundException('Type inconnu');
+        }
 
-        $form = $this->createForm(TransactionTypeType::class, $transactionType);
+        $form = $this->createForm($formTypeClass, $type);
         $form->handleRequest($request);
-       
-        if ($form->isSubmitted() && $form->isValid()) {
 
-            $em->persist($transactionType);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($type);
             $em->flush();
 
-            $this->addFlash('success', 'Type de transaction ajouté.');
-            return $this->redirectToRoute('admin_transaction_type_add');
+            $this->addFlash('success', 'Type ajouté avec succès.');
+            return $this->redirectToRoute('admin_types', ['typeName' => $typeName]);
         }
 
         return $this->render('admin/type_form.html.twig', [
-            'form' => $form,
-            'title' => 'Ajouter un type de transaction',
+            'form' => $form->createView(),
+            'title' => $title,
+            'typeName' => $typeName,
         ]);
     }
+
 }

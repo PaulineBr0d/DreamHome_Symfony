@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<h2>Liste des {{ title }}</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for type in types %}
+            <tr>
+                <td>{{ type.id }}</td>
+                <td>{{ type.name }}</td>
+                <td>
+                    {# actions #}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucun type</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('admin_types_add', { typeName: typeName }) }}">Ajouter un nouveau type</a>
+<a href="{{ path('admin_dashboard') }}">Retour au dashboard</a>
+{% endblock %}

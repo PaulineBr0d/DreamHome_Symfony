@@ -71,12 +71,12 @@ class ItemController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Annonce mise à jour.');
-         return $this->redirectToRoute(
-            $this->isGranted('ROLE_ADMIN') ? 'admin_listing_index' : 'listing_show',
-            $this->isGranted('ROLE_ADMIN') ? [] : ['id' => $item->getId()]
-        );   
-            
+            if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('admin_listing_index');
+        } else {
+            return $this->redirectToRoute('listing_show', ['id' => $item->getId()]);
         }
+        }   
 
         return $this->render('property/update.html.twig', [
             'form' => $form,
