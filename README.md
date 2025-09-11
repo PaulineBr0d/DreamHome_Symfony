@@ -54,5 +54,7 @@ Reprise et migration du projet PHP natif [Dream Home](https://github.com/Pauline
 - **PHP 8.4+**
 - **MySQL**
 
-## A faire 
+## A faire
+- Mettre à jour le controller Favoris 
+- Gestion de l'image
 - Modifier le register pour envoi mail de confirmation => mailer depuis le controller (MailStrap)

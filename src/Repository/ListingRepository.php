@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Listing;
+use App\Entity\PropertyType;
+use App\Entity\TransactionType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,8 +18,12 @@ class ListingRepository extends ServiceEntityRepository
         parent::__construct($registry, Listing::class);
     }
 
-    public function search(?string $city, ?int $type, ?string $transaction, ?float $maxPrice): array
-    {
+    public function search( 
+        ?string $city,
+        ?PropertyType $propertyType,
+        ?TransactionType $transactionType,
+        ?float $maxPrice
+    ): array {
     $qb = $this->createQueryBuilder('l');
 
     if ($city) {
@@ -25,16 +31,15 @@ class ListingRepository extends ServiceEntityRepository
            ->setParameter('city', '%' . $city . '%');
     }
 
-    if ($type) {
-        $qb->andWhere('l.propertyType = :type')
-           ->setParameter('type', $type);
+     if ($propertyType) {
+        $qb->andWhere('l.propertyType = :propertyType')
+           ->setParameter('propertyType', $propertyType);
     }
 
-    if ($transaction) {
-        $qb->andWhere('l.transaction = :transaction')
-           ->setParameter('transaction', $transaction);
-    }
-
+    if ($transactionType) {
+        $qb->andWhere('l.transactionType = :transactionType')
+           ->setParameter('transactionType', $transactionType);
+    }    
     if ($maxPrice) {
         $qb->andWhere('l.price <= :maxPrice')
            ->setParameter('maxPrice', $maxPrice);

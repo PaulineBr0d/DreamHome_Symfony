@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\PropertyType;
+use App\Entity\TransactionType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class SearchType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+         $builder
+            ->add('city', TextType::class, [
+                'required' => false,
+                'label' => 'Ville',
+            ])
+            ->add('property_type', EntityType::class, [
+                'class' => PropertyType::class,
+                'choice_label' => 'name',
+                'required' => false,
+                'placeholder' => 'Tous les types de biens',
+                'label' => 'Type de bien',
+            ])
+            ->add('transaction_type', EntityType::class, [
+                'class' => TransactionType::class,
+                'choice_label' => 'name',
+                'required' => false,
+                'placeholder' => 'Toutes les transactions',
+                'label' => 'Type de transaction',
+            ])
+            ->add('max_price', IntegerType::class, [
+                'required' => false,
+                'label' => 'Prix max',
+            ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        
+        $resolver->setDefaults([
+            'method' => 'GET',
+            'csrf_protection' => false,
+        ]);
+    }
+}

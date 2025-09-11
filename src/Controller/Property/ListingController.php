@@ -2,6 +2,7 @@
 
 namespace App\Controller\Property;
 
+use App\Form\SearchType;
 use App\Repository\ListingRepository;
 use App\Repository\PropertyTypeRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -67,18 +68,24 @@ class ListingController extends AbstractController
     #[Route('/listing/search', name: 'listing_search')]
     public function search(Request $request): Response
     {
-        $city = $request->query->get('city');
-        $type = $request->query->get('property_type');
-        $transaction = $request->query->get('transaction_type');
-        $maxPrice = $request->query->get('max_price');
+        $form = $this->createForm(SearchType::class);
+        $form->handleRequest($request);
 
-        $results = $this->listingRepository->search($city, $type, $transaction, $maxPrice);
+        $data = $form->getData() ?? [];
 
-         $favoriteIds = $request->getSession()->get('favorites', []);
+        $results = $this->listingRepository->search(
+            $data['city'] ?? null,
+            $data['property_type'] ?? null,
+            $data['transaction_type'] ?? null,
+            isset($data['max_price']) ? (float) $data['max_price'] : null
+        );
+
+        $favoriteIds = $request->getSession()->get('favorites', []);
 
         return $this->render('property/search.html.twig', [
             'listings' => $results,
             'favoriteIds' => $favoriteIds,
+            'form' => $form->createView(),
         ]);
     }
 }

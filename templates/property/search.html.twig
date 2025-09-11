@@ -4,40 +4,31 @@
    {% block body %}
    <main>
 
-<form method="GET" action="{{ path('listing_search') }}" class="search-form">
-    <input type="text" name="city" placeholder="Ville" value="{{ app.request.get('city') }}">
-    
-    <input type="number" name="max_price" placeholder="Prix max" value="{{ app.request.get('max_price') }}">
+    <h2 class="text-xl font-bold mb-4">Recherche</h2>
 
-    <select name="property_type">
-        <option value="">Type de bien</option>
-        <option value="1" {% if app.request.get('property_type') == '1' %}selected{% endif %}>Maison</option>
-        <option value="2" {% if app.request.get('property_type') == '2' %}selected{% endif %}>Appartement</option>
-    </select>
+    {{ form_start(form, {attr: {class: 'space-y-4'}}) }}
+        {{ form_row(form.city) }}
+        {{ form_row(form.property_type) }}
+        {{ form_row(form.transaction_type) }}
+        {{ form_row(form.max_price) }}
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Rechercher</button>
+    {{ form_end(form) }}
 
-    <select name="transaction_type">
-        <option value="">Type de transaction</option>
-        <option value="vente" {% if app.request.get('transaction_type') == 'vente' %}selected{% endif %}>Vente</option>
-        <option value="location" {% if app.request.get('transaction_type') == 'location' %}selected{% endif %}>Location</option>
-    </select>
-
-    <button type="submit">Rechercher</button>
-</form>
-<section class="container">
-        {% if listings is not empty %}
-            {% for item in listings %}
-                <div class="item">
-                    <img src="{{ asset(item.imageUrl ?? 'uploads/properties/default.webp') }}" alt="Image de l'annonce">
-                    <h3>{{ item.title }}</h3>
-                    <p><strong>Prix :</strong> {{ item.price|number_format(0, ',', ' ') }} €</p>
-                    <p><strong>Ville :</strong> {{ item.city }}</p>
-                    <p><strong>Description :</strong> {{ item.description[:120] ~ '…' }}</p>
-                    <a href="{{ path('listing_show', {id: item.id}) }}" class="button-item">Voir l'annonce</a>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>Aucun résultat trouvé.</p>
-        {% endif %}
-    </section>
-</main>
+    <section class="container">
+            {% if listings is not empty %}
+                {% for item in listings %}
+                    <div class="item">
+                        <img src="{{ asset(item.imageUrl ?? 'uploads/properties/default.webp') }}" alt="Image de l'annonce">
+                        <h3>{{ item.title }}</h3>
+                        <p><strong>Prix :</strong> {{ item.price|number_format(0, ',', ' ') }} €</p>
+                        <p><strong>Ville :</strong> {{ item.city }}</p>
+                        <p><strong>Description :</strong> {{ item.description[:120] ~ '…' }}</p>
+                        <a href="{{ path('listing_show', {id: item.id}) }}" class="button-item">Voir l'annonce</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Aucun résultat trouvé.</p>
+            {% endif %}
+        </section>
+    </main>
 {% endblock %}
