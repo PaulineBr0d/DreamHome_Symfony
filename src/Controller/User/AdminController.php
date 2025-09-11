@@ -111,11 +111,11 @@ class AdminController extends AbstractController
         if ($typeName === 'property') {
             $type = new PropertyType();
             $title = 'Ajouter un type de propriété';
-             $formTypeClass = PropertyTypeType::class;
+            $formTypeClass = PropertyTypeType::class;
         } elseif ($typeName === 'transaction') {
             $type = new TransactionType();
             $title = 'Ajouter un type de transaction';
-             $formTypeClass = TransactionTypeType::class;
+            $formTypeClass = TransactionTypeType::class;
         } else {
             throw $this->createNotFoundException('Type inconnu');
         }
