@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Interface\TimestampableInterface;
 use App\Entity\Trait\TimestampableTrait;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -186,5 +188,18 @@ class Listing implements TimestampableInterface
 
         return $this;
     }
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="favorites")
+     */
+    private Collection $usersFavorites;
 
+    public function __construct()
+    {
+        $this->userFavorites = new ArrayCollection();
+    }
+
+    public function getUsersFavorites(): Collection
+    {
+        return $this->usersFavorites;
+    }
 }

@@ -17,7 +17,7 @@
     {% set buttonColor = isFavorite ? 'red' : 'favorite' %}
     {% if app.user %} 
         {% include 'components/_button.html.twig' with {
-            action: path('favorite_add'),
+            action: path('favorite'),
             hiddenId: item.id,
             text: buttonText,
             confirm: confirmationText,

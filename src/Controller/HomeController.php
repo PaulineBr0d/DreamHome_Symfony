@@ -25,8 +25,8 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(Request $request): Response
     {
-    $houseType = $this->propertyTypeRepository->findOneBy(['name' => 'Maison']);
-    $apartmentType = $this->propertyTypeRepository->findOneBy(['name' => 'Appartement']);
+    $houseType = $this->propertyTypeRepository->findOneBy(['name' => 'House']);
+    $apartmentType = $this->propertyTypeRepository->findOneBy(['name' => 'Apartment']);
     
     $houses = $this->listingRepository->findBy([
         'propertyType' => $houseType

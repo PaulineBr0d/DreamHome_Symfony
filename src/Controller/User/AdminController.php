@@ -33,7 +33,7 @@ class AdminController extends AbstractController
     #[Route('/listings', name: 'listing_index')]
     public function listingIndex(ListingRepository $listingRepository): Response
     {
-        $listings = $listingRepository->findAll(); // ou filtrer selon besoins
+        $listings = $listingRepository->findAll(); 
 
         return $this->render('admin/listing_index.html.twig', [
             'listings' => $listings
@@ -61,7 +61,7 @@ class AdminController extends AbstractController
             $this->addFlash('success', 'Utilisateur modifié.');
             return $this->redirectToRoute('admin_user_index');
         }
-         // Gestion du bouton de suppression
+        
         if ($request->request->has('delete') && $this->isCsrfTokenValid('delete_user' . $user->getId(), $request->request->get('_token'))) {
         if ($user === $this->getUser()) {
             $this->addFlash('warning', 'Vous ne pouvez pas vous supprimer vous-même.');

@@ -45,6 +45,77 @@ Reprise et migration du projet PHP natif [Dream Home](https://github.com/Pauline
 - Mettre en place des règles d’accès : seuls les administrateurs peuvent entrer dans la partie admin.
 - Proposer une navigation claire entre les différentes parties du site.
 
+## **#2 - Fonctionnalité « Favoris »**
+
+### **1. Accès & périmètre**
+
+- La fonctionnalité est réservée aux **utilisateurs connectés**.
+- Les favoris sont **personnels** (un utilisateur ne voit que ses favoris).
+
+### **2. Actions attendues**
+
+- **Ajouter** une annonce aux favoris depuis la page liste et/ou la page détail.
+- **Retirer** une annonce de ses favoris depuis les mêmes écrans.
+- **Consulter la liste** de ses favoris dans un espace dédié (ex. “Mes favoris”).
+- **Signaler visuellement** qu’une annonce est déjà dans les favoris.
+
+### **3. Contraintes & UX**
+
+- L’interface doit indiquer clairement l’état : favori / non favori.
+- Les actions doivent donner un **retour utilisateur** (message de confirmation).
+
+## **3 - Mise en place d’un espace Agent pour la gestion des annonces**
+
+### **1. Accès et rôles**
+
+- Créer un espace réservé aux **Agents**, accessible uniquement aux utilisateurs possédant le rôle ROLE_AGENT.
+- Séparer clairement l’espace public (visiteurs), l’espace Admin (gestion globale), et l’espace Agent (gestion individuelle).
+- Vérifier que les agents n’ont pas accès à l’administration générale.
+
+---
+
+### **2. Espace Agent**
+
+- Proposer un **tableau de bord** qui présente un résumé des annonces de l’agent.
+- Ajouter des pages permettant de :
+    - **Lister** uniquement les annonces de l’agent connecté.
+    - **Créer** une nouvelle annonce.
+    - **Modifier** une annonce existante, mais uniquement si elle lui appartient.
+    - **Supprimer ou désactiver** une annonce, toujours en respectant la propriété.
+
+---
+
+### **3. Contraintes**
+
+- Chaque annonce doit être **rattachée à l’agent** qui l’a créée.
+- Les agents ne doivent **jamais voir ou gérer les annonces des autres**.
+
+
+## 4 - **Mise en place de la pagination des annonces**
+
+### **1. Accès et périmètre**
+
+- La pagination doit être disponible sur :
+    - La page listant uniquement les **appartements**.
+    - La page listant uniquement les **maisons**.
+- L’utilisateur doit pouvoir naviguer facilement entre les pages (suivante, précédente, numéros).
+
+---
+
+### **2. Fonctionnalités attendues**
+
+- Limiter le nombre d’annonces affichées par page (par exemple 5, 10 ou 20).
+- Afficher une **navigation de pagination** claire (ex. << 1 2 3 >>).
+- L’utilisateur doit pouvoir cliquer pour voir les pages suivantes/précédentes.
+- Le système doit s’adapter automatiquement si le nombre d’annonces est inférieur au nombre par page (ex. moins de 10 annonces → pas de pagination).
+
+---
+
+### **3. Contraintes**
+
+- L’interface doit être **ergonomique et claire** (pas de liens inutiles si une seule page existe).
+- Les performances doivent être assurées (ne pas charger toutes les annonces en mémoire d’un coup).
+
 
 ## Technologies
 

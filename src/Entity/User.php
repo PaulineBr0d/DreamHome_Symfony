@@ -127,6 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->listings = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
     }
     /**
      * @return Collection<int, Listing>
@@ -157,4 +158,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+    #[ORM\ManyToMany(targetEntity: Listing::class)]
+    #[ORM\JoinTable(name: 'user_favorites')]
+    private Collection $favorites;
+
+    public function getFavorites(): Collection
+    {
+        return $this->favorites;
+    }
+
+    public function addFavorite(Listing $listing): self
+    {
+        if (!$this->favorites->contains($listing)) {
+            $this->favorites[] = $listing;
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(Listing $listing): self
+    {
+        $this->favorites->removeElement($listing);
+
+        return $this;
+    }
+
 }
+
+
+
