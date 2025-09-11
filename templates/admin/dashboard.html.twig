@@ -6,10 +6,30 @@
 
 <nav>
     <ul>
-        <li><a href="{{ path('admin_listing_index') }}">Gérer les annonces</a></li>
-        <li><a href="{{ path('admin_user_index') }}">Gérer les utilisateurs</a></li>
-        <li><a href="{{ path('admin_property_type_add') }}">Gérer les types de propriété</a></li>
-        <li><a href="{{ path('admin_transaction_type_add') }}">Gérer les types de transaction</a></li>
+        <li>{% include 'components/_button.html.twig' with {
+            action: path('admin_listing_index'),
+            text: 'Gérer les annonces',
+            method: 'GET',
+            color: 'blue'
+        } %}</li>
+        <li>{% include 'components/_button.html.twig' with {
+            action: path('admin_user_index'),
+            text: 'Gérer les utilisateurs',
+            method: 'GET',
+            color: 'blue'
+        } %}</li>
+        <li>{% include 'components/_button.html.twig' with {
+            action: path('admin_property_type_add'),
+            text: 'Gérer les types de propriété',
+            method: 'GET',
+            color: 'blue'
+        } %}</li>
+        <li>{% include 'components/_button.html.twig' with {
+            action: path('admin_transaction_type_add'),
+            text: 'Gérer les types de transaction',
+            method: 'GET',
+            color: 'blue'
+        } %}</li>
     </ul>
 </nav>
 {% endblock %}

@@ -15,7 +15,7 @@
     {% set buttonText = isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' %}
     {% set confirmationText = isFavorite ? 'Retirer des favoris ?' : 'Ajouter aux favoris ?' %}
     {% set buttonColor = isFavorite ? 'red' : 'favorite' %}
-    {#{% if app.user %} #}
+    {% if app.user %} 
         {% include 'components/_button.html.twig' with {
             action: path('favorite_add'),
             hiddenId: item.id,
@@ -23,10 +23,10 @@
             confirm: confirmationText,
             color: buttonColor
         } %}
-    {#{% endif %} #}
+    {% endif %} 
 
     {# Modifier #}
-    {#{% if app.user and (item.userId == app.user.id or is_granted('ROLE_ADMIN')) %}#}
+    {% if app.user and (item.user and item.user.id == app.user.id or is_granted('ROLE_ADMIN')) %}
         <a href="{{ path('update', {id: item.id}) }}" class="button-item">Modifier</a>
 
     {# Supprimer #}
@@ -37,6 +37,6 @@
         text: 'Supprimer',
         color: 'red'
     } %}
-    {#{% endif %}#}
+    {% endif %}
     </div>
 </div>

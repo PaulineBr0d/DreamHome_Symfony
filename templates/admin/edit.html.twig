@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier utilisateur{% endblock %}
+
+{% block body %}
+<main>
+    <h2>Modifier {{ user.email }}</h2>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary">Enregistrer</button>
+    {{ form_end(form) }}
+    {% include 'components/_button.html.twig' with {
+    action: path('admin_user_edit', { id: user.id }),
+    method: 'POST',
+    submitName: 'delete',
+    confirm: 'Confirmer la suppression ?',
+    csrfToken: 'delete_user' ~ user.id,
+    text: 'Supprimer',
+    color: 'red'
+} %}
+     <div>
+     {% include 'components/_button.html.twig' with {
+            action: path('admin_user_index'),
+            text: 'retour à la liste',
+            method: 'GET',
+            color: 'blue'
+        } %}
+    </div> 
+</main>
+{% endblock %}

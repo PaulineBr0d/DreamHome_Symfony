@@ -2,10 +2,13 @@
 
 namespace App\Controller\User;
 
+
+use App\Entity\User;
 use App\Entity\PropertyType;
 use App\Entity\TransactionType;
 use App\Repository\ListingRepository;
 use App\Repository\UserRepository;
+use App\Form\UserType;
 use App\Form\PropertyTypeType;
 use App\Form\TransactionTypeType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin', name: 'admin_')]
 class AdminController extends AbstractController
 {   
@@ -42,6 +47,39 @@ class AdminController extends AbstractController
             'users' => $users
         ]);
     }
+    #[Route('/users/edit/{id}', name: 'user_edit')]
+    public function editUser(Request $request, User $user, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        // Gestion du formulaire d'édition
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'Utilisateur modifié.');
+            return $this->redirectToRoute('admin_user_index');
+        }
+         // Gestion du bouton de suppression
+        if ($request->request->has('delete') && $this->isCsrfTokenValid('delete_user' . $user->getId(), $request->request->get('_token'))) {
+        if ($user === $this->getUser()) {
+            $this->addFlash('warning', 'Vous ne pouvez pas vous supprimer vous-même.');
+        } else {
+            $em->remove($user);
+            $em->flush();
+            $this->addFlash('success', 'Utilisateur supprimé.');
+        }
+        return $this->redirectToRoute('admin_user_index');
+    }
+
+        return $this->render('admin/edit.html.twig', [
+            'form' => $form,
+            'user' => $user,
+        ]);
+    }
+    
+
+
+
     #[Route('/property-type/add', name: 'property_type_add')]
     public function addPropertyType(Request $request, EntityManagerInterface $em)
     {

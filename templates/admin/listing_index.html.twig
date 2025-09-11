@@ -29,6 +29,7 @@
                     {% include 'components/_button.html.twig' with {
                         action: path('update', {id: listing.id}),
                         text: 'Modifier',
+                        method: 'GET',
                         color: 'blue'
                     } %}
                     

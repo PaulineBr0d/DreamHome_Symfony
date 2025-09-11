@@ -22,16 +22,15 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.roles|join(', ') }}</td>
                 <td>
-                    {# Exemple : bannir ou supprimer #}
-                    {% if user != app.user %}
+                
                         {% include 'components/_button.html.twig' with {
-                            action: path('admin_user_delete', {id: user.id}),
-                            confirm: 'Confirmer la suppression de cet utilisateur ?',
-                            csrfToken: 'delete_user' ~ user.id,
-                            text: 'Supprimer',
-                            color: 'red'
+                            action: path('admin_user_edit', {id: user.id}),
+                            method: 'GET',
+                            text: 'Modifier',
+                            color: 'blue'
                         } %}
-                    {% endif %}
+               
+                
                 </td>
             </tr>
         {% else %}

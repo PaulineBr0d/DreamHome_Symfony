@@ -26,13 +26,11 @@ class ItemController extends AbstractController
     ): Response {
         $listing = new Listing();
 
-        #$now = new \DateTimeImmutable();
-        #$listing->setCreatedAt($now);
-        #$listing->setUpdatedAt($now);
-        //pour test
-        $user = $userRepository->find(1);
+         // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
         if (!$user) {
-            throw $this->createNotFoundException;
+            throw $this->createAccessDeniedException('Vous devez être connecté pour créer une annonce.');
         }
         $listing->setUser($user);
         
@@ -60,22 +58,31 @@ class ItemController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
     ): Response {
-    $form = $this->createForm(ListingType::class, $item);
-    $form->handleRequest($request);
+        // Vérifier que l'utilisateur est propriétaire ou admin
+        if ($this->getUser() !== $item->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour modifier cette annonce.');
+            return $this->redirectToRoute('home');
+        }
 
-    if ($form->isSubmitted() && $form->isValid()) {
-       # $item->setUpdatedAt(new \DateTimeImmutable());
-        $em->flush();
+        $form = $this->createForm(ListingType::class, $item);
+        $form->handleRequest($request);
 
-        $this->addFlash('success', 'Annonce mise à jour.');
-        return $this->redirectToRoute('listing_show', ['id' => $item->getId()]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'Annonce mise à jour.');
+         return $this->redirectToRoute(
+            $this->isGranted('ROLE_ADMIN') ? 'admin_listing_index' : 'listing_show',
+            $this->isGranted('ROLE_ADMIN') ? [] : ['id' => $item->getId()]
+        );   
+            
+        }
+
+        return $this->render('property/update.html.twig', [
+            'form' => $form,
+            'property' => $item, 
+        ]);
     }
-
-    return $this->render('property/update.html.twig', [
-        'form' => $form->createView(),
-        'property' => $item, 
-    ]);
-}
 
     #[Route('/delete/{id}', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(
@@ -86,18 +93,20 @@ class ItemController extends AbstractController
         $token = $request->request->get('_token');
 
         if ($this->isCsrfTokenValid('delete' . $item->getId(), $token)) {
-            #if ($this->getUser() === $item->getUser() || $this->isGranted('ROLE_ADMIN')) {
+            if ($this->getUser() === $item->getUser() || $this->isGranted('ROLE_ADMIN')) {
                 $em->remove($item);
                 $em->flush();
 
                 $this->addFlash('success', 'Annonce supprimée.');
             } else {
-        #        $this->addFlash('danger', 'Vous n\'avez pas les droits pour supprimer cette annonce.');
-        #    }
-        #else {
-           $this->addFlash('danger', 'Token CSRF invalide.');
+                $this->addFlash('danger', 'Vous n\'avez pas les droits pour supprimer cette annonce.');
+            }
+        } else {
+            $this->addFlash('danger', 'Token CSRF invalide.');
         }
 
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute(
+            $this->isGranted('ROLE_ADMIN') ? 'admin_listing_index' : 'home'
+        );
     }
 }

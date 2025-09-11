@@ -35,6 +35,13 @@
         <button class="btn btn-lg btn-primary" type="submit">
             Sign in
         </button>
-    </form>  
+    </form> 
+     <a>Pas encore de compte ? 
+     {% include 'components/_button.html.twig' with {
+            action: path('app_register'),
+            text: 'Créér un compte',
+            color: 'blue',
+            method: 'GET'
+        } %}</a> 
     </main>
 {% endblock %}

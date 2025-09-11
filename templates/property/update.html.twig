@@ -5,13 +5,7 @@
  {% block body %}
 
   <main class="form-connect" >
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label == 'success' ? 'success' : 'danger' }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %} 
+    
     
     <h4>Modifier une annonce</h4>
 

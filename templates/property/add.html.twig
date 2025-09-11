@@ -6,13 +6,7 @@
 
 
     <main class="form-connect">
-    {% for label, messages in app.flashes %}
-    {% for message in messages %}
-        <div class="alert alert-{{ label == 'success' ? 'success' : 'danger' }}">
-            {{ message }}
-        </div>
-        {% endfor %}
-    {% endfor %}
+    
         <h4>Nouvel ajout d'un bien</h4>
       
          {% include 'components/_form.html.twig' with {
