@@ -64,7 +64,7 @@ Reprise et migration du projet PHP natif [Dream Home](https://github.com/Pauline
 - L’interface doit indiquer clairement l’état : favori / non favori.
 - Les actions doivent donner un **retour utilisateur** (message de confirmation).
 
-## **3 - Mise en place d’un espace Agent pour la gestion des annonces**
+## **#3 - Mise en place d’un espace Agent pour la gestion des annonces**
 
 ### **1. Accès et rôles**
 
@@ -91,7 +91,7 @@ Reprise et migration du projet PHP natif [Dream Home](https://github.com/Pauline
 - Les agents ne doivent **jamais voir ou gérer les annonces des autres**.
 
 
-## 4 - **Mise en place de la pagination des annonces**
+##  **#4 - Mise en place de la pagination des annonces**
 
 ### **1. Accès et périmètre**
 
@@ -126,7 +126,7 @@ Reprise et migration du projet PHP natif [Dream Home](https://github.com/Pauline
 - **MySQL**
 
 ## A faire
-- Mettre à jour le controller Favoris 
+- Ajout des TwigBundles
 - Gestion de l'image
-- Modifier le register pour envoi mail de confirmation => mailer depuis le controller (MailStrap)
-- Générer des Fixtures (avec Faker?)
+- Modifier le register pour envoi mail de confirmation => mailer depuis le controller (MailStrap) // ajout du isVerified en bdd
+- Admin : ajouter méthodes sur type transaction/propriété (modif', sup')

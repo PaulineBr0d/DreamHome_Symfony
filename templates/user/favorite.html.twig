@@ -5,11 +5,15 @@
    <main>
      <h2>Ma liste des favoris</h2>
          <section class="container">
+         {% set favoriteIds = favorites|map(i => i.id) %}
           {% for item in favorites %}
-              {% include 'components/_item.html.twig' with { item: item, userId: userId, userRole: userRole, favorites: favorites|keys } %}
-          {% else %}
-              <p>Aucun favori trouvé.</p>
-          {% endfor %}
-        </section>
-        </main>
+        {% include 'components/_item.html.twig' with {
+            item: item,
+            favoriteIds: favoriteIds
+        } %}
+    {% else %}
+        <p>Aucun favori trouvé.</p>
+    {% endfor %}
+    </section>
+    </main>
 {% endblock %}

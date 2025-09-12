@@ -1,0 +1,43 @@
+{% if pageCount > 1 %}
+    <nav class="flex justify-center mt-6">
+        <ul class="inline-flex items-center space-x-1 text-sm">
+            {# ← Page précédente #}
+            {% if previous is defined %}
+                <li>
+                    <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}"
+                       class="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100 transition">
+                        &laquo;
+                    </a>
+                </li>
+            {% endif %}
+
+            {# Liens vers les pages #}
+            {% for page in pagesInRange %}
+                {% if page != current %}
+                    <li>
+                        <a href="{{ path(route, query|merge({(pageParameterName): page})) }}"
+                           class="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100 transition">
+                            {{ page }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <span class="px-3 py-1 rounded-md bg-blue-500 text-white border border-blue-500">
+                            {{ page }}
+                        </span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {# → Page suivante #}
+            {% if next is defined %}
+                <li>
+                    <a href="{{ path(route, query|merge({(pageParameterName): next})) }}"
+                       class="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100 transition">
+                        &raquo;
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}

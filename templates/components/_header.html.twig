@@ -16,4 +16,7 @@
         {% if app.user and is_granted('ROLE_ADMIN') %}
         <a href="{{ path('admin_dashboard') }}">Dashboard</a> 
          {% endif %}
+         {% if app.user and is_granted('ROLE_AGENT') %}
+        <a href="{{ path('agent_dashboard') }}">Dashboard</a> 
+         {% endif %}
 </header>

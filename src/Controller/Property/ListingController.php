@@ -30,15 +30,24 @@ class ListingController extends AbstractController
         Request $request,
         PaginatorInterface $paginator
     ): Response {
-    $type = $this->propertyTypeRepository->findOneBy(['name' => $name]);
+      $type = $this->propertyTypeRepository->findOneBy(['name' => $name]);
 
     if (!$type) {
         throw $this->createNotFoundException('Type de bien introuvable.');
     }
 
-    $listings = $this->listingRepository->findBy(['propertyType' => $type]);
+    $query = $this->listingRepository->createQueryBuilder('l')
+        ->andWhere('l.propertyType = :type')
+        ->setParameter('type', $type)
+        ->orderBy('l.createdAt', 'DESC')
+        ->getQuery();
 
-    $pagination = $paginator->paginate($listings, $request->query->getInt('page', 1), 10);
+    $pagination = $paginator->paginate(
+        $query,
+        $request->query->getInt('page', 1),
+        10
+    );
+
     $favoriteIds = $request->getSession()->get('favorites', []);
 
     return $this->render('property/list_by_type.html.twig', [
@@ -80,12 +89,10 @@ class ListingController extends AbstractController
             isset($data['max_price']) ? (float) $data['max_price'] : null
         );
 
-        $favoriteIds = $request->getSession()->get('favorites', []);
 
         return $this->render('property/search.html.twig', [
             'listings' => $results,
-            'favoriteIds' => $favoriteIds,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 }

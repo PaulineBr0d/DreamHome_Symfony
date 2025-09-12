@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\ListingRepository;
 use App\Repository\PropertyTypeRepository;
+use App\Repository\TransactionTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,13 +14,17 @@ class HomeController extends AbstractController
 {
     private ListingRepository $listingRepository;
     private PropertyTypeRepository $propertyTypeRepository;
+    private TransactionTypeRepository $transactionTypeRepository;
+
 
     public function __construct(  
         ListingRepository $listingRepository,
-        PropertyTypeRepository $propertyTypeRepository)
+        PropertyTypeRepository $propertyTypeRepository,
+        TransactionTypeRepository $transactionTypeRepository)
     {
         $this->listingRepository = $listingRepository;
         $this->propertyTypeRepository = $propertyTypeRepository;
+        $this->transactionTypeRepository = $transactionTypeRepository;
     }
     
     #[Route('/', name: 'home')]

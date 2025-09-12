@@ -1,0 +1,10 @@
+knp_paginator:
+    page_range: 5                         # Nombre de pages visibles dans le bloc de pagination
+    default_options:
+        page_name: page                   # Nom du paramètre GET, ex: ?page=2
+        sort_field_name: sort             # Pour tri (facultatif)
+        sort_direction_name: direction    # Pour tri aussi
+        distinct: true
+    template:
+        pagination: 'pagination/tailwind_pagination.html.twig' 
+        sortable: '@KnpPaginator/Pagination/sortable_link.html.twig'

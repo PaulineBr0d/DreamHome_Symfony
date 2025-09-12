@@ -23,6 +23,8 @@
                         <p><strong>Prix :</strong> {{ item.price|number_format(0, ',', ' ') }} €</p>
                         <p><strong>Ville :</strong> {{ item.city }}</p>
                         <p><strong>Description :</strong> {{ item.description[:120] ~ '…' }}</p>
+                        <p><strong>Type de propriété :</strong> {{ item.propertyType.name|e }}</p>
+                        <p><strong>Type de transaction :</strong> {{ item.transactionType.name|e }}</p>
                         <a href="{{ path('listing_show', {id: item.id}) }}" class="button-item">Voir l'annonce</a>
                     </div>
                 {% endfor %}

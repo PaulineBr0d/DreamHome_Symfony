@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annonces - Agent{% endblock %}
+
+{% block body %}
+<main>
+    <h2>Gestion des annonces</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titre</th>
+                <th>Ville</th>
+                <th>Prix</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for listing in listings %}
+            <tr>
+                <td>{{ listing.id }}</td>
+                <td>{{ listing.title }}</td>
+                <td>{{ listing.city }}</td>
+                <td>{{ listing.price }} €</td>
+                <td>
+                    {% include 'components/_button.html.twig' with {
+                        action: path('update', {id: listing.id}),
+                        text: 'Modifier',
+                        method: 'GET',
+                        color: 'blue'
+                    } %}
+                    
+                    {% include 'components/_button.html.twig' with {
+                        action: path('delete', {id: listing.id}),
+                        confirm: 'Confirmer la suppression ?',
+                        csrfToken: 'delete' ~ listing.id,
+                        text: 'Supprimer',
+                        color: 'red'
+                    } %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">Aucune annonce</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}
