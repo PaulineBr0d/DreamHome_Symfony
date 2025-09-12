@@ -129,3 +129,4 @@ Reprise et migration du projet PHP natif [Dream Home](https://github.com/Pauline
 - Ajout des TwigBundles
 - Modifier le register pour envoi mail de confirmation => mailer depuis le controller (MailStrap) // ajout du isVerified en bdd
 - Admin : ajouter méthodes sur type transaction/propriété (modif', sup')
+- API : premiers tests get/post ok, sécurité JWT

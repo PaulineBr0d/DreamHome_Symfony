@@ -29,7 +29,7 @@ class ApiTransactionController extends AbstractController
             $serializer->serialize($transactionType, 'json', ['groups' => ['transaction:read']]),
             201,
             [],
-            true // already JSON, so no re-encoding
+            true 
         );
     }
 }
