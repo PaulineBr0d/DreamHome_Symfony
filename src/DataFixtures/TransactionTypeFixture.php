@@ -13,7 +13,7 @@ class TransactionTypeFixture extends Fixture
     {
         foreach (TransactionTypeEnum::cases() as $key => $transactionTypeEnum) {
             $transactionType = new TransactionType();
-            $transactionType->setName($transactionTypeEnum->name);
+            $transactionType->setName($transactionTypeEnum->value);
 
             $this->addReference('transaction_type_' . $key, $transactionType);
             $manager->persist($transactionType);

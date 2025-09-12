@@ -11,4 +11,5 @@ enum PropertyTypeEnum: string
     case LOFT = 'Loft';
     case FARM = 'Farm';
 
+
 }

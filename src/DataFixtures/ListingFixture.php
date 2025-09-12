@@ -38,7 +38,7 @@ class ListingFixture extends Fixture implements DependentFixtureInterface
                 ->setTitle(self::TITLES[array_rand(self::TITLES)])
                 ->setDescription($faker->text(100))
                 ->setPrice($faker->randomNumber(5, false))
-                ->setUser($this->getReference('user_' . rand(0, 3), User::class))
+                ->setUser($this->getReference('agent_' . rand(0, 3), User::class)) 
                 ->setTransactionType($this->getReference('transaction_type_' . rand(0, 2), TransactionType::class))
                 ->setPropertyType($this->getReference('property_type_' . rand(0, 5), PropertyType::class))
             ;

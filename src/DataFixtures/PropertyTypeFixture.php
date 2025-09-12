@@ -13,7 +13,7 @@ class PropertyTypeFixture extends Fixture
     {
         foreach (PropertyTypeEnum::cases() as $key => $propertyTypeEnum) {
             $propertyType = new PropertyType();
-            $propertyType->setName($propertyTypeEnum->name);
+            $propertyType->setName($propertyTypeEnum->value);
 
             $this->addReference('property_type_' . $key, $propertyType);
             $manager->persist($propertyType);

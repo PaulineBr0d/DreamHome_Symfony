@@ -16,45 +16,39 @@ class UserFixture extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR');
+    $faker = Factory::create('fr_FR');
 
-        for ($i = 0; $i < 4; $i++) {
-            $user = new User();
-            $user
-                ->setEmail($faker->email())
-                ->setRoles(['ROLE_USER'])
-                ->setPassword($this->passwordHasher->hashPassword(
-                    $user,
-                    'password'
-                ))
-            ;
-
-            $this->addReference('user_' . $i, $user);
-
-            $manager->persist($user);
-        }
-        $manager->flush();
-
+         // Créer plusieurs utilisateurs classiques
+    for ($i = 0; $i < 4; $i++) {
         $user = new User();
         $user
-            ->setEmail('agent@mail.com')
-            ->setRoles(['ROLE_AGENT'])
-            ->setPassword($this->passwordHasher->hashPassword($user, 'password'))
-           
-        ;
-        $this->addReference('agent', $user);
+            ->setEmail($faker->email())
+            ->setRoles(['ROLE_USER'])
+            ->setPassword($this->passwordHasher->hashPassword($user, 'password'));
+        $this->addReference('user_' . $i, $user);
         $manager->persist($user);
+    }
 
-        $admin = new User();
-        $admin
-            ->setEmail('admin@mail.com')
-            ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($this->passwordHasher->hashPassword($admin, 'adminPassword'))
-    
-        ;
-        $this->addReference('admin', $admin);
-        $manager->persist($admin);
+    // Créer plusieurs agents
+    for ($i = 0; $i < 4; $i++) {
+        $agent = new User();
+        $agent
+            ->setEmail("agent{$i}@mail.com")
+            ->setRoles(['ROLE_AGENT'])
+            ->setPassword($this->passwordHasher->hashPassword($agent, 'password'));
+        $this->addReference('agent_' . $i, $agent);
+        $manager->persist($agent);
+    }
 
-        $manager->flush();
+    // Admin
+    $admin = new User();
+    $admin
+        ->setEmail('admin@mail.com')
+        ->setRoles(['ROLE_ADMIN'])
+        ->setPassword($this->passwordHasher->hashPassword($admin, 'adminPassword'));
+    $this->addReference('admin', $admin);
+    $manager->persist($admin);
+
+    $manager->flush();
     }
 }

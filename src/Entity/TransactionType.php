@@ -56,7 +56,10 @@ class TransactionType implements TimestampableInterface
 
         return $this;
     }
-
+    public function __toString(): string
+    {
+        return $this->name ?? '';
+    }
     /**
      * @return Collection<int, Listing>
      */
