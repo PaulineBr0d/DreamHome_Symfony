@@ -30,23 +30,28 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(Request $request): Response
     {
-    $houseType = $this->propertyTypeRepository->findOneBy(['name' => 'House']);
-    $apartmentType = $this->propertyTypeRepository->findOneBy(['name' => 'Apartment']);
-    
-    $houses = $this->listingRepository->findBy([
-        'propertyType' => $houseType
-    ], ['createdAt' => 'DESC'], 3);
+        $houseType = $this->propertyTypeRepository->findOneBy(['name' => 'House']);
+        $apartmentType = $this->propertyTypeRepository->findOneBy(['name' => 'Apartment']);
+        
+        $houses = $this->listingRepository->findBy([
+            'propertyType' => $houseType
+        ], ['createdAt' => 'DESC'], 3);
 
-    $apartments = $this->listingRepository->findBy([
-        'propertyType' => $apartmentType
-    ], ['createdAt' => 'DESC'], 3);
+        $apartments = $this->listingRepository->findBy([
+            'propertyType' => $apartmentType
+        ], ['createdAt' => 'DESC'], 3);
+        
+        $user = $this->getUser();
+        $favorites = $user ? $user->getFavorites() : new ArrayCollection();
+        $favoriteIds = [];
+        foreach ($favorites as $favorite) {
+            $favoriteIds[] = $favorite->getId();
+        }
 
-    $favoriteIds = $request->getSession()->get('favorites', []);
-
-    return $this->render('index.html.twig', [
-        'houses' => $houses,
-        'apartments' => $apartments,
-        'favoriteIds' => $favoriteIds,
-    ]);
+        return $this->render('index.html.twig', [
+            'houses' => $houses,
+            'apartments' => $apartments,
+            'favoriteIds' => $favoriteIds,
+        ]);
     }
 }
