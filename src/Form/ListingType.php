@@ -8,8 +8,10 @@ use App\Entity\TransactionType;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File as FileConstraint;
 
 class ListingType extends AbstractType
 {
@@ -23,7 +25,19 @@ class ListingType extends AbstractType
             ->add('price')
             ->add('city')
             ->add('description')
-            
+            ->add('uploadedFile', FileType::class, [
+                'label' => 'Upload Image',
+                'mapped'=> false,
+                'required'=> false,
+                'constraints' => [
+                   new FileConstraint([
+                        'maxSize' => '2M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/jpg'],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPEG/PNG).',
+                    ]),
+                 ]
+            ]
+            )
             
             ->add('transactionType', EntityType::class, [
                 'class' => TransactionType::class,

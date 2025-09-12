@@ -11,6 +11,7 @@ use App\Repository\PropertyTypeRepository;
 use App\Repository\TransactionTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,8 @@ class ItemController extends AbstractController
     public function add(
         Request $request,
         EntityManagerInterface $em,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        SluggerInterface $slugger
     ): Response {
         $listing = new Listing();
 
@@ -38,7 +40,24 @@ class ItemController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-          
+        $imageFile = $form->get('uploadedFile')->getData();
+
+        if ($imageFile) {
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+            try {
+                $imageFile->move(
+                    $this->getParameter('uploads_directory'), 
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // gestion de l'erreur
+            }
+
+            $listing->setImageUrl($newFilename); 
+            }
 
             $em->persist($listing);
             $em->flush();
@@ -57,6 +76,7 @@ class ItemController extends AbstractController
         #[MapEntity(id: 'id')] Listing $item,
         Request $request,
         EntityManagerInterface $em,
+        SluggerInterface $slugger
     ): Response {
         // Vérifier que l'utilisateur est propriétaire ou admin
         if ($this->getUser() !== $item->getUser() && !$this->isGranted('ROLE_ADMIN')) {
@@ -68,6 +88,30 @@ class ItemController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+        $imageFile = $form->get('uploadedFile')->getData();
+
+        if ($imageFile) {
+          
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+            try {
+                $imageFile->move(
+                    $this->getParameter('uploads_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                 // gestion de l'erreur
+            }
+            $oldImage = $item->getImageUrl();
+
+            if ($oldImage && file_exists($this->getParameter('uploads_directory').'/'.$oldImage)) {
+                unlink($this->getParameter('uploads_directory').'/'.$oldImage);
+            }
+            $item->setImageUrl($newFilename);
+        }
+
             $em->flush();
 
             $this->addFlash('success', 'Annonce mise à jour.');
@@ -80,7 +124,7 @@ class ItemController extends AbstractController
 
         return $this->render('property/update.html.twig', [
             'form' => $form,
-            'property' => $item, 
+            'item' => $item, 
         ]);
     }
 
@@ -94,6 +138,13 @@ class ItemController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete' . $item->getId(), $token)) {
             if ($this->getUser() === $item->getUser() || $this->isGranted('ROLE_ADMIN')) {
+                $imageName = $item->getImageUrl(); // ou getImage()
+                if ($imageName) {
+                    $imagePath = $this->getParameter('uploads_directory') . '/' . $imageName;
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                }
                 $em->remove($item);
                 $em->flush();
 

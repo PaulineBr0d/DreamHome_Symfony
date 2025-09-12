@@ -1,6 +1,8 @@
 <div class="item"> 
-    <img src="{{ asset(item.imageUrl ?? 'uploads/properties/default.webp') }}" alt="Image de l'annonce">
-
+   
+    {% if item.imageUrl %}
+    <img src="{{ asset('uploads/' ~ item.imageUrl) }}" alt="Image de l'annonce">
+    {% endif %}
     <h3>{{ item.title|e }}</h3>
     
     <p><strong>Prix :</strong> {{ item.price|number_format(0, ',', ' ') }} €</p>
