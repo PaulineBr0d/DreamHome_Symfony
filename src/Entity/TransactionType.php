@@ -22,7 +22,7 @@ class TransactionType implements TimestampableInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['transaction:read'])]
+    #[Groups(['transaction:read','transaction:write'])]
     private ?string $name = null;
 
     #[ORM\Column]
