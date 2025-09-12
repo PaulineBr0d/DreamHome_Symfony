@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ListingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ListingRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -20,9 +21,11 @@ class Listing implements TimestampableInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['listing:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['listing:read'])]
     #[Assert\NotBlank(message: "Le titre est obligatoire.")]
     #[Assert\Length(
         min: 5,
@@ -33,6 +36,7 @@ class Listing implements TimestampableInterface
     private ?string $title = null;
 
     #[ORM\Column]
+    #[Groups(['listing:read'])]
     #[Assert\NotBlank(message: "Le prix est obligatoire.")]
     #[Assert\Type(
         type: 'numeric',
@@ -47,6 +51,7 @@ class Listing implements TimestampableInterface
     private ?float $price = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['listing:read'])]
     #[Assert\NotBlank(message: "La ville est obligatoire.")]
     #[Assert\Length(
         min: 2,
@@ -57,6 +62,7 @@ class Listing implements TimestampableInterface
     private ?string $city = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['listing:read'])]
     #[Assert\NotBlank(message: "La description est obligatoire.")]
     #[Assert\Length(
         min: 10,
@@ -69,14 +75,9 @@ class Listing implements TimestampableInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageUrl = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
-
     #[ORM\ManyToOne(inversedBy: 'listings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['listing:read'])]
     private ?TransactionType $transactionType = null;
 
     #[ORM\ManyToOne(inversedBy: 'listings')]
