@@ -4,7 +4,7 @@
    {% block body %}
    <main>
     <h2>Nos annonces de maisons</h2>
-    <section class="container">
+    <section class="container  mx-auto px-6 py-8"">
     {% for item in houses  %}
         {% include 'components/_item.html.twig' with {
             item: item,
