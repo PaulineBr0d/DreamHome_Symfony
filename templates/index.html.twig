@@ -4,7 +4,7 @@
    {% block body %}
    <main>
    
-    <h2>Nos annonces de maisons</h2>
+    <h2 class="text-2xl font-semibold text-gray-900 mb-1">Nos annonces de maisons</h2>
     <section class="container">
     {% for item in houses  %}
         {% include 'components/_item.html.twig' with {
@@ -15,7 +15,7 @@
         <p>Aucune annonce trouvée.</p>
     {% endfor %}
 </section>
-    <h2>Nos annonces d’appartements</h2>
+    <h2 class="text-2xl font-semibold text-gray-900 mb-1">Nos annonces d’appartements</h2>
     <section class="container">
     {% for item in apartments  %}
         {% include 'components/_item.html.twig' with {
